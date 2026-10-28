@@ -1,5 +1,5 @@
 
 window.SUMAVENTURAS_CONFIG = {
   url: 'https://ralqodwnnpsmhheknspl.supabase.co',
-  anonKey: 'PEGA_AQUI_TU_CLAVE_PUBLICA'
+  anonKey: 'sb_publishable_mLzaulrU9x-m2rJ75ioKZw_IwRhiqrw'
 };
