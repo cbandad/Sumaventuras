@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1683ec">
+<title>Sumaventuras — Las tablas de sumar</title>
+<style>
+:root{--ink:#172d50;--blue:#1683ec;--pale:#eaf6ff;--green:#20a66b}
+*{box-sizing:border-box}body{margin:0;font-family:ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(180deg,#dff5ff,#f4f1ff);min-height:100vh}
+button{cursor:pointer;font:inherit;transition:transform .12s,filter .12s}button:active{transform:scale(.97)}button:focus-visible{outline:3px solid #ffbd35;outline-offset:3px}
+header{max-width:980px;margin:auto;padding:22px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.eyebrow{font-size:10px;letter-spacing:2px;font-weight:1000;color:#155b91}.logo{font-size:clamp(25px,5vw,40px);font-weight:1000;color:#fff;text-shadow:0 3px #1974a8}.subtitle{font-size:12px;font-weight:900;color:#155d8b}
+.coins{background:#104d86;color:white;padding:10px 14px;border-radius:15px;text-align:center;font-weight:1000;box-shadow:0 3px #0a3866;white-space:nowrap}
+main{max-width:980px;margin:auto;padding:0 16px 28px}.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}.nav button{background:#ffffffdf;border:1px solid #cce4fa;border-radius:12px;padding:9px 13px;font-size:13px;font-weight:900;color:#315577}.nav button.active{background:#174f91;color:white}.rank{margin-left:auto;font-size:12px;font-weight:900;color:#155f8e}
+.pane{background:#ffffffed;border:1px solid #d4e9ff;border-radius:18px;padding:16px;box-shadow:0 4px 14px #234c7110}.intro{text-align:center;margin-bottom:14px}.intro .mascots{font-size:30px}.title{font-size:20px;font-weight:1000}.muted{font-size:12px;font-weight:800;color:#6a83a0;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.island{min-height:112px;border:2px solid #ffffffaa;border-radius:19px;box-shadow:0 4px 0 #164c7390;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-shadow:0 2px 3px #0006;padding:8px;overflow:hidden}
+.island .emoji{font-size:34px;line-height:1.1}.island .num{background:#fff;color:#28476a;text-shadow:none;border-radius:99px;width:27px;height:27px;display:grid;place-items:center;font-weight:1000;font-size:14px;margin-top:5px}.island small{font-size:11px;font-weight:900;margin-top:3px}.island .status{font-size:12px;margin-top:3px}
+.info{display:flex;gap:12px;align-items:center;margin-top:14px}.info .emoji{font-size:38px}
+.screen{display:none}.screen.active{display:block}.gamehead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.smallbtn{background:#ffffffdd;border:1px solid #cce4fa;border-radius:12px;padding:8px 11px;font-size:13px;font-weight:900;color:#315577}.progress{height:10px;background:#dbeaf7;border-radius:99px;overflow:hidden;margin-top:12px}.progress span{display:block;height:100%;background:linear-gradient(90deg,#40d9c1,#51b5ff);border-radius:99px;transition:width .3s}
+.challenge{text-align:center;margin-top:14px;background:linear-gradient(180deg,#fff,#f4fbff)}.scene{font-size:62px;line-height:1.25}.equation{background:linear-gradient(135deg,#fff3cf,#ffe0a0);border:3px solid #d69a49;border-radius:17px;padding:14px;font-size:clamp(38px,8vw,56px);font-weight:1000;color:#18365e;box-shadow:inset 0 2px #fff;margin:16px 0}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ans{background:linear-gradient(#fff,#f1f7ff);border:2px solid #c4ddf5;border-radius:15px;min-height:66px;font-size:27px;font-weight:1000;color:#24456f;box-shadow:0 3px 0 #c3d9ec}.ans:disabled{opacity:.85}.blue{background:linear-gradient(180deg,#45c7ff,#1683ec);border:2px solid #0870c5;color:white;border-radius:14px;box-shadow:0 4px 0 #0758a5;font-weight:900;padding:12px 18px}.wood{background:linear-gradient(180deg,#ffe5a1,#f6b95d);border:2px solid #c77d32;color:#663b16;border-radius:12px;box-shadow:0 3px 0 #b36c2a;font-weight:900;padding:12px 18px}.full{width:100%;margin-top:12px}.feedback{min-height:44px;padding-top:13px;font-size:14px;font-weight:1000}.hidden{display:none!important}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}.stat{background:#fff5d9;border-radius:13px;padding:12px 3px;text-align:center}.stat:nth-child(2){background:#e5f6ff}.stat:nth-child(3){background:#e5fff0}.medalgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.medal{background:#e3f9eb;text-align:center;padding:12px 3px;border-radius:12px}.medal.locked{background:#f0f5fa}.medal .emoji{font-size:28px}.medal small{display:block;font-size:11px;font-weight:900}.footer{text-align:center;font-size:11px;color:#155d85;font-weight:900;padding:20px 8px 0}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.island{min-height:130px}.pane{padding:20px}}@media(max-width:380px){.grid{gap:8px}.island{min-height:98px}.island .emoji{font-size:29px}.island small{font-size:10px}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">JUEGO DE AVENTURAS</div><div class="logo">🗺️ SUMAVENTURAS</div><div class="subtitle">¡Conviértete en un héroe de las sumas!</div></div><div class="coins">⭐ MONEDAS<div id="coins" style="font-size:24px">0</div></div></header>
+<main>
+<div class="nav"><button id="mapNav" class="active">🗺️ Mundos</button><button id="trophyNav">🏆 Trofeos</button><div id="rank" class="rank">🌱 Explorador</div></div>
+<section id="mapScreen" class="screen active">
+<div class="pane intro"><div class="mascots">🦊 🧭 🐾</div><div class="title">¡Elige tu próximo destino!</div><div class="muted">Cada isla es una tabla. ¡Completa 10 retos para ganar su medalla!</div></div>
+<div id="islands" class="grid"></div>
+<div class="pane info"><div class="emoji">🎒</div><div><b>Tu misión de hoy</b><div class="muted">Practica una tabla, gana monedas y colecciona medallas. ¡Tú puedes!</div></div><div style="margin-left:auto;font-size:28px">⭐</div></div>
+</section>
+<section id="gameScreen" class="screen">
+<div class="pane"><div class="gamehead"><button id="back" class="smallbtn">← Mapa</button><b id="worldName">🏴‍☠️ Isla pirata</b><b id="round">1/10</b></div><div class="progress"><span id="progress" style="width:0%"></span></div></div>
+<div class="pane challenge"><div id="scene" class="scene">🏴‍☠️</div><div id="story" class="muted">¡Resuelve la suma para encontrar el tesoro!</div><div id="equation" class="equation">2 + 1 = ?</div><div id="answers" class="answers"></div><div id="feedback" class="feedback" aria-live="polite"></div><button id="next" class="blue full hidden">¡Siguiente reto! ➜</button>
+<div id="finish" class="hidden"><div id="finishIcon" style="font-size:64px">🏆</div><div id="finishTitle" class="title" style="font-size:25px">¡Misión cumplida!</div><div id="finishDesc" class="muted" style="margin:12px 0"></div><div id="medal" style="font-size:36px;margin-bottom:14px"></div><button id="replay" class="wood">🔁 Volver a jugar</button> <button id="finishMap" class="blue">🗺️ Mapa</button></div></div>
+</section>
+<section id="trophyScreen" class="screen">
+<div class="pane"><div class="title">🏆 Sala de trofeos</div><div class="muted">¡Mira todo lo que has conseguido!</div><div class="stats"><div class="stat"><div style="font-size:26px">⭐</div><b id="statCoins">0</b><div class="muted">Monedas</div></div><div class="stat"><div style="font-size:26px">🥇</div><b id="statMedals">0/9</b><div class="muted">Medallas</div></div><div class="stat"><div style="font-size:26px">🎯</div><b id="statCorrect">0</b><div class="muted">Aciertos</div></div></div></div>
+<div class="pane" style="margin-top:12px"><b>🌎 Tus mundos</b><div id="medalGrid" class="medalgrid" style="margin-top:12px"></div></div><button id="trophyBack" class="blue full">← Volver al mapa</button>
+</section>
+<div class="footer">🌈 ¡Un pequeño héroe aprende una suma cada vez! 🌈</div>
+</main>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const worlds=[
+{name:'Dinosaurios',e:'🦕',bg:'linear-gradient(150deg,#54bf72,#16885d)',scene:'🦖',story:'Ayuda al dinosaurio a encontrar sus huevos'},
+{name:'Isla pirata',e:'🏴‍☠️',bg:'linear-gradient(150deg,#32bce9,#1768b5)',scene:'🦜',story:'¡Encuentra el cofre del capitán!'},
+{name:'Desierto',e:'🏜️',bg:'linear-gradient(150deg,#f8cb68,#e38b42)',scene:'🐪',story:'¡Descifra el mapa de las momias!'},
+{name:'Mundo helado',e:'🐧',bg:'linear-gradient(150deg,#8ae4f4,#478bd8)',scene:'🐧',story:'Ayuda al pingüino a cruzar el hielo'},
+{name:'Selva mágica',e:'🦊',bg:'linear-gradient(150deg,#62dba0,#14885d)',scene:'🦜',story:'Busca las gemas escondidas'},
+{name:'Galaxia',e:'🚀',bg:'linear-gradient(150deg,#9973ee,#4331a4)',scene:'👽',story:'¡Carga el cohete para despegar!'},
+{name:'Castillo',e:'🏰',bg:'linear-gradient(150deg,#f69bcb,#a25cda)',scene:'🧙',story:'Ayuda al mago con su hechizo'},
+{name:'Dragones',e:'🐉',bg:'linear-gradient(150deg,#fa9b52,#cf483d)',scene:'🐲',story:'¡Consigue gemas para el dragón!'},
+{name:'Océano',e:'🐬',bg:'linear-gradient(150deg,#45d5dd,#087bbd)',scene:'🐬',story:'¡Busca perlas bajo el mar!'}
+];
+let data={coins:0,medals:[],correct:0,played:0};
+try{const s=JSON.parse(localStorage.getItem('sumaventuras-save-v1')||'null');if(s&&Array.isArray(s.medals))data={...data,...s}}catch(e){}
+let table=1,round=0,correctThis=0,locked=false,order=[],answer=0;
+function save(){try{localStorage.setItem('sumaventuras-save-v1',JSON.stringify(data))}catch(e){}}
+function rank(){return data.medals.length>=9?'👑 Maestro de las sumas':data.medals.length>=5?'🦸 Superhéroe':data.medals.length?'🧭 Aventurero':'🌱 Explorador'}
+function stats(){
+$('coins').textContent=data.coins;$('rank').textContent=rank();$('statCoins').textContent=data.coins;$('statMedals').textContent=data.medals.length+'/9';$('statCorrect').textContent=data.correct;
+$('medalGrid').innerHTML=worlds.map((w,i)=>`<div class="medal ${data.medals.includes(i+1)?'':'locked'}"><div class="emoji" style="${data.medals.includes(i+1)?'':'filter:grayscale(1);opacity:.45'}">${w.e}</div><small>${i+1}. ${w.name}</small><div>${data.medals.includes(i+1)?'🥇':'🔒'}</div></div>`).join('');
+}
+function drawMap(){$('islands').innerHTML=worlds.map((w,i)=>`<button class="island" data-table="${i+1}" style="background:${w.bg}"><span class="emoji">${w.e}</span><span class="num">${i+1}</span><small>${w.name}</small><span class="status">${data.medals.includes(i+1)?'⭐🥇':'🎯 Jugar'}</span></button>`).join('');document.querySelectorAll('[data-table]').forEach(b=>b.onclick=()=>start(+b.dataset.table));stats()}
+function show(screen){['map','game','trophy'].forEach(s=>$(s+'Screen').classList.toggle('active',s===screen));$('mapNav').classList.toggle('active',screen==='map');$('trophyNav').classList.toggle('active',screen==='trophy');if(screen==='trophy')stats()}
+function start(n){table=n;round=0;correctThis=0;order=Array.from({length:10},(_,i)=>i+1).sort(()=>Math.random()-.5);$('finish').classList.add('hidden');$('answers').classList.remove('hidden');$('scene').textContent=worlds[n-1].scene;$('worldName').textContent=worlds[n-1].e+' '+worlds[n-1].name;show('game');question()}
+function question(){
+locked=false;$('next').classList.add('hidden');$('answers').classList.remove('hidden');$('feedback').textContent='';$('round').textContent=(round+1)+'/10';$('progress').style.width=(round*10)+'%';let b=order[round];answer=table+b;$('story').textContent=worlds[table-1].story+' · Reto '+(round+1);$('equation').textContent=table+' + '+b+' = ?';
+let opts=new Set([answer]);while(opts.size<4){let v=answer+Math.floor(Math.random()*9)-4;if(v>=0&&v<=18)opts.add(v)}
+$('answers').innerHTML=[...opts].sort(()=>Math.random()-.5).map(v=>`<button class="ans" data-answer="${v}">${v}</button>`).join('');
+document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>check(+b.dataset.answer,b));
+}
+function check(v,btn){
+if(locked)return;locked=true;const ok=v===answer;document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=true);
+if(ok){correctThis++;data.correct++;data.coins+=5;$('feedback').style.color='#108657';$('feedback').textContent=['✨ ¡Genial! +5 monedas','🎉 ¡Una suma perfecta!','⭐ ¡Qué cerebro! +5 monedas'][Math.floor(Math.random()*3)];btn.style.background='#d7fbe4';btn.style.borderColor='#31b875';}
+else{$('feedback').style.color='#bb6834';$('feedback').textContent='💡 ¡Casi! '+table+' + '+order[round]+' = '+answer+'. ¡Ahora ya la sabes!';btn.style.background='#ffeddd';btn.style.borderColor='#e6a16c';document.querySelectorAll('[data-answer]').forEach(b=>{if(+b.dataset.answer===answer){b.style.background='#d7fbe4';b.style.borderColor='#31b875'}})}
+data.played++;save();stats();round++;$('progress').style.width=(round*10)+'%';if(round>=10)finish();else $('next').classList.remove('hidden');
+}
+function finish(){
+$('answers').classList.add('hidden');$('next').classList.add('hidden');$('finish').classList.remove('hidden');$('finishIcon').textContent=correctThis>=8?'🏆':'🎉';$('finishTitle').textContent=correctThis===10?'¡Tabla dominada!':correctThis>=8?'¡Misión superada!':'¡Aventura completada!';$('finishDesc').textContent='Has acertado '+correctThis+' de 10 sumas y ganado '+(correctThis*5)+' monedas. '+(correctThis>=8?'¡Eres un auténtico héroe!':'¡Repite la misión para aprender aún más!');$('medal').textContent=correctThis>=8?'🥇':'⭐';
+if(correctThis>=8&&!data.medals.includes(table)){data.medals.push(table);data.coins+=20;$('finishDesc').textContent+=' ¡Medalla nueva y 20 monedas extra!';$('medal').textContent='🥇 +20 ⭐'}
+save();stats();$('progress').style.width='100%';
+}
+$('mapNav').onclick=()=>show('map');$('trophyNav').onclick=()=>show('trophy');$('back').onclick=()=>{drawMap();show('map')};$('trophyBack').onclick=()=>{drawMap();show('map')};$('next').onclick=question;$('replay').onclick=()=>start(table);$('finishMap').onclick=()=>{drawMap();show('map')};
+drawMap();show('map');
+})();
+</script>
+</body>
+</html>
