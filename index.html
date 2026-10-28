@@ -99,7 +99,7 @@ document.addEventListener('visibilitychange',()=>{if(document.visibilityState===
 window.addEventListener('pagehide',saveOnHide);
 window.addEventListener('beforeunload',()=>{if(activeProfile){try{localStorage.setItem(profileSaveKey(activeProfile.id),JSON.stringify(data))}catch(e){};if(supabaseClient&&savedVersion<saveVersion){supabaseClient.from('sumaventuras_profiles').update({progress:data,updated_at:new Date().toISOString()}).eq('id',activeProfile.id)}}});
 
-let table=1,round=0,correctThis=0,locked=false,order=[],answer=0;
+let table=1,round=0,correctThis=0,locked=false,order=[],answer=0,attempts=0,coinsEarnedThis=0;
 function rank(){return data.medals.length>=9?'👑 Maestro de las sumas':data.medals.length>=5?'🦸 Superhéroe':data.medals.length?'🧭 Aventurero':'🌱 Explorador'}
 function stats(){
 $('coins').textContent=data.coins;$('rank').textContent=rank();$('statCoins').textContent=data.coins;$('statMedals').textContent=data.medals.length+'/9';$('statCorrect').textContent=data.correct;
@@ -107,21 +107,45 @@ $('medalGrid').innerHTML=worlds.map((w,i)=>`<div class="medal ${data.medals.incl
 }
 function drawMap(){$('islands').innerHTML=worlds.map((w,i)=>`<button class="island" data-table="${i+1}" style="background:${w.bg}"><span class="emoji">${w.e}</span><span class="num">${i+1}</span><small>${w.name}</small><span class="status">${data.medals.includes(i+1)?'⭐🥇':'🎯 Jugar'}</span></button>`).join('');document.querySelectorAll('[data-table]').forEach(b=>b.onclick=()=>start(+b.dataset.table));stats()}
 function show(screen){['map','game','trophy'].forEach(s=>$(s+'Screen').classList.toggle('active',s===screen));$('mapNav').classList.toggle('active',screen==='map');$('trophyNav').classList.toggle('active',screen==='trophy');if(screen==='trophy')stats()}
-function start(n){table=n;round=0;correctThis=0;order=Array.from({length:10},(_,i)=>i+1).sort(()=>Math.random()-.5);$('finish').classList.add('hidden');$('answers').classList.remove('hidden');$('scene').textContent=worlds[n-1].scene;$('worldName').textContent=worlds[n-1].e+' '+worlds[n-1].name;show('game');question()}
+function start(n){table=n;round=0;correctThis=0;coinsEarnedThis=0;order=Array.from({length:10},(_,i)=>i+1).sort(()=>Math.random()-.5);$('finish').classList.add('hidden');$('answers').classList.remove('hidden');$('scene').textContent=worlds[n-1].scene;$('worldName').textContent=worlds[n-1].e+' '+worlds[n-1].name;show('game');question()}
 function question(){
-locked=false;$('next').classList.add('hidden');$('answers').classList.remove('hidden');$('feedback').textContent='';$('round').textContent=(round+1)+'/10';$('progress').style.width=(round*10)+'%';let b=order[round];answer=table+b;$('story').textContent=worlds[table-1].story+' · Reto '+(round+1);$('equation').textContent=table+' + '+b+' = ?';
+attempts=0;locked=false;$('next').classList.add('hidden');$('answers').classList.remove('hidden');$('feedback').textContent='';$('round').textContent=(round+1)+'/10';$('progress').style.width=(round*10)+'%';let b=order[round];answer=table+b;$('story').textContent=worlds[table-1].story+' · Reto '+(round+1);$('equation').textContent=table+' + '+b+' = ?';
 let opts=new Set([answer]);while(opts.size<4){let v=answer+Math.floor(Math.random()*9)-4;if(v>=0&&v<=18)opts.add(v)}
 $('answers').innerHTML=[...opts].sort(()=>Math.random()-.5).map(v=>`<button class="ans" data-answer="${v}">${v}</button>`).join('');
 document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>check(+b.dataset.answer,b));
 }
 function check(v,btn){
-if(locked)return;locked=true;const ok=v===answer;document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=true);
-if(ok){correctThis++;data.correct++;data.coins+=5;$('feedback').style.color='#108657';$('feedback').textContent=['✨ ¡Genial! +5 monedas','🎉 ¡Una suma perfecta!','⭐ ¡Qué cerebro! +5 monedas'][Math.floor(Math.random()*3)];btn.style.background='#d7fbe4';btn.style.borderColor='#31b875';}
-else{$('feedback').style.color='#bb6834';$('feedback').textContent='💡 ¡Casi! '+table+' + '+order[round]+' = '+answer+'. ¡Ahora ya la sabes!';btn.style.background='#ffeddd';btn.style.borderColor='#e6a16c';document.querySelectorAll('[data-answer]').forEach(b=>{if(+b.dataset.answer===answer){b.style.background='#d7fbe4';b.style.borderColor='#31b875'}})}
-data.played++;save();stats();round++;$('progress').style.width=(round*10)+'%';if(round>=10)finish();else $('next').classList.remove('hidden');
+if(locked)return;
+const ok=v===answer;
+if(ok){
+ locked=true;correctThis++;data.correct++;
+ const reward=attempts===0?10:attempts===1?6:3;coinsEarnedThis+=reward;data.coins+=reward;
+ $('feedback').style.color='#108657';
+ $('feedback').textContent=attempts===0?'✨ ¡Increíble! ¡A la primera! +10 monedas':attempts===1?'🎉 ¡Lo has conseguido al segundo intento! +6 monedas':'💡 ¡Muy bien! Has usado la pista y lo has conseguido. +3 monedas';
+ btn.style.background='#d7fbe4';btn.style.borderColor='#31b875';
+ document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=true);
+ data.played++;save();stats();round++;$('progress').style.width=(round*10)+'%';
+ if(round>=10)finish();else $('next').classList.remove('hidden');
+ return;
+}
+attempts++;
+btn.disabled=true;btn.style.background='#ffeddd';btn.style.borderColor='#e6a16c';
+if(attempts===1){
+ $('feedback').style.color='#bb6834';$('feedback').textContent='🌟 ¡Casi, explorador! Equivocarse es aprender. ¡Prueba otra vez!';
+ return;
+}
+if(attempts===2){
+ $('feedback').style.color='#bb6834';$('feedback').textContent='🧭 ¡Una pista! Cuenta '+table+' objetos y después añade '+order[round]+' más. ¡Tú puedes!';
+ return;
+}
+locked=true;
+$('feedback').style.color='#bb6834';$('feedback').textContent='💛 ¡Buen esfuerzo! La respuesta es '+table+' + '+order[round]+' = '+answer+'. ¡Ya sabes una más!';
+document.querySelectorAll('[data-answer]').forEach(b=>{b.disabled=true;if(+b.dataset.answer===answer){b.style.background='#d7fbe4';b.style.borderColor='#31b875'}});
+data.played++;save();stats();round++;$('progress').style.width=(round*10)+'%';
+if(round>=10)finish();else $('next').classList.remove('hidden');
 }
 function finish(){
-$('answers').classList.add('hidden');$('next').classList.add('hidden');$('finish').classList.remove('hidden');$('finishIcon').textContent=correctThis>=8?'🏆':'🎉';$('finishTitle').textContent=correctThis===10?'¡Tabla dominada!':correctThis>=8?'¡Misión superada!':'¡Aventura completada!';$('finishDesc').textContent='Has acertado '+correctThis+' de 10 sumas y ganado '+(correctThis*5)+' monedas. '+(correctThis>=8?'¡Eres un auténtico héroe!':'¡Repite la misión para aprender aún más!');$('medal').textContent=correctThis>=8?'🥇':'⭐';
+$('answers').classList.add('hidden');$('next').classList.add('hidden');$('finish').classList.remove('hidden');$('finishIcon').textContent=correctThis>=8?'🏆':'🎉';$('finishTitle').textContent=correctThis===10?'¡Tabla dominada!':correctThis>=8?'¡Misión superada!':'¡Aventura completada!';$('finishDesc').textContent='Has resuelto '+correctThis+' de 10 sumas y ganado '+coinsEarnedThis+' monedas durante esta aventura. '+(correctThis>=8?'¡Eres un auténtico héroe!':'¡Cada intento te ayuda a aprender!');$('medal').textContent=correctThis>=8?'🥇':'⭐';
 if(correctThis>=8&&!data.medals.includes(table)){data.medals.push(table);data.coins+=20;$('finishDesc').textContent+=' ¡Medalla nueva y 20 monedas extra!';$('medal').textContent='🥇 +20 ⭐'}
 save();stats();$('progress').style.width='100%';
 }
