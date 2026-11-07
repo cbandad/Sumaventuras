@@ -40,7 +40,7 @@ main{max-width:980px;margin:auto;padding:0 16px 28px}.nav{display:flex;gap:8px;a
 <section id="mapScreen" class="screen active">
 <div class="pane intro"><div class="mascots">🦊 🧭 🐾</div><div class="title">¡Elige tu próximo destino!</div><div class="muted">Cada destino es un reto de cálculo. ¡Consigue hasta 3 estrellas y mejora tu medalla!</div></div>
 <div id="islands" class="grid"></div>
-<div class="pane info"><div class="emoji">🎒</div><div><b>Tu misión de hoy</b><div class="muted">Practica una tabla o una nueva aventura de cálculo mental. ¡Tú puedes!</div></div><div style="margin-left:auto;font-size:28px">⭐</div></div>
+<div class="pane info"><div class="emoji">🎒</div><div><b>Tu misión de hoy</b><div class="muted">Practica una tabla o explora el Valle de los Gemelos. ¡Tú puedes!</div></div><div style="margin-left:auto;font-size:28px">⭐</div></div>
 </section>
 <section id="gameScreen" class="screen">
 <div class="pane"><div class="gamehead"><button id="back" class="smallbtn">← Mapa</button><b id="worldName">🏴‍☠️ Isla pirata</b><b id="round">1/10</b></div><div class="progress"><span id="progress" style="width:0%"></span></div></div>
@@ -71,19 +71,15 @@ const worlds=[
 {name:'Dragones',e:'🐉',bg:'linear-gradient(150deg,#fa9b52,#cf483d)',scene:'🐲',story:'¡Consigue gemas para el dragón!',hint:'🔥',thing:'llamas'},
 {name:'Océano',e:'🐬',bg:'linear-gradient(150deg,#45d5dd,#087bbd)',scene:'🐬',story:'¡Busca perlas bajo el mar!',hint:'🫧',thing:'burbujas',key:'9',type:'table'}
 ];
-// Dos aventuras nuevas. Cada nivel conserva su propio progreso con una clave independiente.
+// Valle de los Gemelos: un destino único con 11 niveles de dobles.
 const twinLevels=Array.from({length:11},(_,a)=>({
- name:'Doble '+a+' + '+a,e:'🐉',bg:'linear-gradient(150deg,#a78bfa,#6d45bb)',scene:'🐲',
+ name:a+' + '+a,e:'🐉',bg:'linear-gradient(150deg,#a78bfa,#6d45bb)',scene:'🐲',
  story:'En el Valle de los Gemelos, reúne dos grupos idénticos',hint:'🐉',thing:'dragones',key:'twins-'+a,type:'double',a,b:a,
- adventure:'🐉 Valle de los Gemelos',levelNo:a+1
+ adventure:'🐉 Valle de los Gemelos',levelNo:'Dobles'
 }));
-const friendLevels=Array.from({length:6},(_,a)=>({
- name:'Amigos '+a+' y '+(10-a),e:'🏰',bg:'linear-gradient(150deg,#ffd36b,#e58a32)',scene:'✨',
- story:'En el Reino de los Amigos del 10, completa la decena',hint:'⭐',thing:'estrellas',key:'friends10-'+a,type:'friend10',a,b:10-a,
- adventure:'🏰 Reino de los Amigos del 10',levelNo:a+1
-}));
+const BASE_WORLD_COUNT=worlds.length;
 worlds.forEach((w,i)=>{if(!w.key){w.key=i+1;w.type='table';}});
-worlds.push(...twinLevels,...friendLevels);
+worlds.push(...twinLevels);
 const TOTAL_LEVELS=worlds.length;
 let data={coins:0,medals:[],correct:0,played:0,levelRecords:{},globalAward:false};
 function profileSaveKey(id){return 'sumaventuras-profile-'+id}
@@ -122,12 +118,18 @@ function medalIcon(stars){return stars>=3?'🥇':stars===2?'🥈':stars===1?'�
 function starsForScore(score){return score>=27?3:score>=20?2:score>0?1:0}
 function stats(){
 $('coins').textContent=data.coins;$('rank').textContent=rank();$('statCoins').textContent=data.coins;$('statMedals').textContent=completedLevels()+'/'+TOTAL_LEVELS;$('statStars').textContent=Object.values(data.levelRecords||{}).reduce((n,r)=>n+(r&&r.stars||0),0)+'/'+(TOTAL_LEVELS*3);$('statCorrect').textContent=data.correct;$('globalAwardPanel').classList.toggle('hidden',!data.globalAward);
-$('medalGrid').innerHTML=worlds.map((w,i)=>{const r=(data.levelRecords||{})[recordKey(w)];const stars=r?r.stars:0;return `<div class="medal ${stars?'':'locked'}"><div class="emoji" style="${stars?'':'filter:grayscale(1);opacity:.45'}">${w.e}</div><small>${w.adventure? w.adventure+' · ':''}${w.levelNo?'Nivel '+w.levelNo+' · ':''}${w.name}</small><div>${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><small>${r?medalIcon(stars)+' · Récord '+r.score+'/30':'Sin completar'}</small></div>`}).join('');
+$('medalGrid').innerHTML=worlds.map((w,i)=>{const r=(data.levelRecords||{})[recordKey(w)];const stars=r?r.stars:0;return `<div class="medal ${stars?'':'locked'}"><div class="emoji" style="${stars?'':'filter:grayscale(1);opacity:.45'}">${w.e}</div><small>${w.name}</small><div>${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><small>${r?medalIcon(stars)+' · Récord '+r.score+'/30':'Sin completar'}</small></div>`}).join('');
 }
-function drawMap(){
- const original=worlds.slice(0,9),twins=worlds.slice(9,20),friends=worlds.slice(20);
- const card=(w,i)=>{const r=(data.levelRecords||{})[recordKey(w)];const stars=r?r.stars:0;const medal=medalIcon(stars);return `<button class="island" data-table="${i+1}" style="background:${w.bg}"><span class="emoji">${w.e}</span><span class="num">${w.levelNo||i+1}</span><small>${w.name}</small><span class="status">${stars?'⭐'.repeat(stars)+'☆'.repeat(3-stars):'🎯 Jugar'}</span><span class="map-awards"><span class="map-medal" aria-label="Medalla">${medal}</span><span>${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</span><span>🏆 ${r?r.score+'/30':'—'}</span></span></button>`};
- $('islands').innerHTML=`<div style="grid-column:1/-1;font-weight:1000;color:#24557d;padding:4px 2px">🌍 Las tablas de sumar</div>${original.map((w,i)=>card(w,i)).join('')}<div style="grid-column:1/-1;font-weight:1000;color:#6845a4;padding:12px 2px 4px">🐉 Valle de los Gemelos · Dobles del 0 al 10</div>${twins.map((w,i)=>card(w,i+9)).join('')}<div style="grid-column:1/-1;font-weight:1000;color:#a45c18;padding:12px 2px 4px">🏰 Reino de los Amigos del 10</div>${friends.map((w,i)=>card(w,i+20)).join('')}`;
+function drawMap(view='main'){
+ const card=(w,index,label)=>{const r=(data.levelRecords||{})[recordKey(w)];const stars=r?r.stars:0;return `<button class="island" data-table="${index+1}" style="background:${w.bg}"><span class="emoji">${w.e}</span><span class="num">${label??(index+1)}</span><small>${w.name}</small><span class="status">${stars?'⭐'.repeat(stars)+'☆'.repeat(3-stars):'🎯 Jugar'}</span><span class="map-awards"><span class="map-medal" aria-label="Medalla">${medalIcon(stars)}</span><span>${'★'.repeat(stars)}${'☆'.repeat(3-stars)}</span><span>🏆 ${r?r.score+'/30':'—'}</span></span></button>`};
+ if(view==='twins'){
+   $('islands').innerHTML=`<div style="grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:4px 2px 10px"><button class="smallbtn" id="backToDestinations">← Destinos</button><div><b>🐉 Valle de los Gemelos</b><div class="muted">Elige los dobles que quieres practicar</div></div></div>${twinLevels.map((w,i)=>card(w,BASE_WORLD_COUNT+i,w.name)).join('')}`;
+   $('backToDestinations').onclick=()=>drawMap('main');
+ }else{
+   const base=worlds.slice(0,BASE_WORLD_COUNT);
+   $('islands').innerHTML=`<div style="grid-column:1/-1;font-weight:1000;color:#24557d;padding:4px 2px">🌍 Tablas de sumar</div>${base.map((w,i)=>card(w,i)).join('')}<button class="island" id="openTwins" style="background:linear-gradient(150deg,#a78bfa,#6d45bb)"><span class="emoji">🐉</span><span class="num">Dobles</span><small>Valle de los Gemelos</small><span class="status">Explora 0+0 hasta 10+10</span><span class="map-awards"><span>🐉</span><span>11 pruebas</span></span></button>`;
+   $('openTwins').onclick=()=>drawMap('twins');
+ }
  document.querySelectorAll('[data-table]').forEach(b=>b.onclick=()=>start(+b.dataset.table));stats()
 }
 function show(screen){['map','game','trophy'].forEach(s=>$(s+'Screen').classList.toggle('active',s===screen));$('mapNav').classList.toggle('active',screen==='map');$('trophyNav').classList.toggle('active',screen==='trophy');if(screen==='trophy')stats()}
@@ -202,7 +204,7 @@ if(stars>=2&&!data.medals.includes(key)){data.medals.push(key);data.coins+=20;$(
 if(!data.globalAward&&completedLevels()>=TOTAL_LEVELS){data.globalAward=true;data.coins+=50;$('finishDesc').textContent+=' 👑 ¡Gran Aventurero! Has completado todas las pruebas y ganas 50 monedas extra.';}
 save();drawMap();stats();$('progress').style.width='100%';
 }
-$('mapNav').onclick=()=>show('map');$('trophyNav').onclick=()=>show('trophy');$('back').onclick=()=>{drawMap();show('map')};$('trophyBack').onclick=()=>{drawMap();show('map')};$('next').onclick=question;$('replay').onclick=()=>start(table);$('finishMap').onclick=()=>{drawMap();show('map')};
+$('mapNav').onclick=()=>{drawMap('main');show('map')};$('trophyNav').onclick=()=>show('trophy');$('back').onclick=()=>{drawMap('main');show('map')};$('trophyBack').onclick=()=>{drawMap('main');show('map')};$('next').onclick=question;$('replay').onclick=()=>start(table);$('finishMap').onclick=()=>{drawMap('main');show('map')};
 function setProfileMessage(t){$('profileMessage').textContent=t}
 function renderAvatarPicker(){const picker=$('avatarPicker');picker.innerHTML='';AVATARS.forEach(a=>{const b=document.createElement('button');b.type='button';b.className='avatar-option'+(a===selectedAvatar?' selected':'');b.textContent=a;b.setAttribute('aria-label','Avatar '+a);b.setAttribute('aria-pressed',a===selectedAvatar?'true':'false');b.onclick=()=>{selectedAvatar=a;renderAvatarPicker()};picker.appendChild(b)})}
 function resetProfileForm(){editingProfileId=null;$('profileFormTitle').textContent='➕ Crear jugador';$('profileSubmit').textContent='Crear';$('cancelEdit').classList.add('hidden');$('profileName').value='';selectedAvatar='🦊';renderAvatarPicker()}
