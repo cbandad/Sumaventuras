@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#1683ec">
+<title>Sumaventuras — Las tablas de sumar</title>
+<style>
+:root{--ink:#172d50;--blue:#1683ec;--pale:#eaf6ff;--green:#20a66b}
+*{box-sizing:border-box}body{margin:0;font-family:ui-rounded,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--ink);background:linear-gradient(180deg,#dff5ff,#f4f1ff);min-height:100vh}
+button{cursor:pointer;font:inherit;transition:transform .12s,filter .12s}button:active{transform:scale(.97)}button:focus-visible{outline:3px solid #ffbd35;outline-offset:3px}
+header{max-width:980px;margin:auto;padding:22px 16px 12px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.eyebrow{font-size:10px;letter-spacing:2px;font-weight:1000;color:#155b91}.logo{font-size:clamp(25px,5vw,40px);font-weight:1000;color:#fff;text-shadow:0 3px #1974a8}.subtitle{font-size:12px;font-weight:900;color:#155d8b}
+.coins{background:#104d86;color:white;padding:10px 14px;border-radius:15px;text-align:center;font-weight:1000;box-shadow:0 3px #0a3866;white-space:nowrap}
+main{max-width:980px;margin:auto;padding:0 16px 28px}.nav{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:8px 0 14px}.nav button{background:#ffffffdf;border:1px solid #cce4fa;border-radius:12px;padding:9px 13px;font-size:13px;font-weight:900;color:#315577}.nav button.active{background:#174f91;color:white}.rank{margin-left:auto;font-size:12px;font-weight:900;color:#155f8e}
+.pane{background:#ffffffed;border:1px solid #d4e9ff;border-radius:18px;padding:16px;box-shadow:0 4px 14px #234c7110}.intro{text-align:center;margin-bottom:14px}.intro .mascots{font-size:30px}.title{font-size:20px;font-weight:1000}.muted{font-size:12px;font-weight:800;color:#6a83a0;line-height:1.5}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.island{min-height:112px;border:2px solid #ffffffaa;border-radius:19px;box-shadow:0 4px 0 #164c7390;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;text-shadow:0 2px 3px #0006;padding:8px;overflow:hidden}
+.island .emoji{font-size:34px;line-height:1.1}.island .num{background:#fff;color:#28476a;text-shadow:none;border-radius:99px;width:27px;height:27px;display:grid;place-items:center;font-weight:1000;font-size:14px;margin-top:5px}.island small{font-size:11px;font-weight:900;margin-top:3px}.island .status{font-size:12px;margin-top:3px}.island .map-awards{display:flex;gap:7px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:6px;padding:4px 7px;border-radius:10px;background:#ffffffd9;color:#24456f;text-shadow:none;font-size:11px;font-weight:1000}.island .map-awards span{white-space:nowrap}.island .map-awards .map-medal{font-size:17px}.island .map-medal{font-size:15px}
+.info{display:flex;gap:12px;align-items:center;margin-top:14px}.info .emoji{font-size:38px}
+.screen{display:none}.screen.active{display:block}.gamehead{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}.smallbtn{background:#ffffffdd;border:1px solid #cce4fa;border-radius:12px;padding:8px 11px;font-size:13px;font-weight:900;color:#315577}.progress{height:10px;background:#dbeaf7;border-radius:99px;overflow:hidden;margin-top:12px}.progress span{display:block;height:100%;background:linear-gradient(90deg,#40d9c1,#51b5ff);border-radius:99px;transition:width .3s}
+.challenge{text-align:center;margin-top:14px;background:linear-gradient(180deg,#fff,#f4fbff)}.scene{font-size:62px;line-height:1.25}.equation{background:linear-gradient(135deg,#fff3cf,#ffe0a0);border:3px solid #d69a49;border-radius:17px;padding:14px;font-size:clamp(38px,8vw,56px);font-weight:1000;color:#18365e;box-shadow:inset 0 2px #fff;margin:16px 0}.answers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.ans{background:linear-gradient(#fff,#f1f7ff);border:2px solid #c4ddf5;border-radius:15px;min-height:66px;font-size:27px;font-weight:1000;color:#24456f;box-shadow:0 3px 0 #c3d9ec}.ans:disabled{opacity:.85}.blue{background:linear-gradient(180deg,#45c7ff,#1683ec);border:2px solid #0870c5;color:white;border-radius:14px;box-shadow:0 4px 0 #0758a5;font-weight:900;padding:12px 18px}.wood{background:linear-gradient(180deg,#ffe5a1,#f6b95d);border:2px solid #c77d32;color:#663b16;border-radius:12px;box-shadow:0 3px 0 #b36c2a;font-weight:900;padding:12px 18px}.full{width:100%;margin-top:12px}.feedback{min-height:44px;padding-top:13px;font-size:14px;font-weight:1000}.hidden{display:none!important}.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:14px}.stat{background:#fff5d9;border-radius:13px;padding:12px 3px;text-align:center}.stat:nth-child(2){background:#e5f6ff}.stat:nth-child(3){background:#e5fff0}.medalgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.medal{background:#e3f9eb;text-align:center;padding:12px 3px;border-radius:12px}.medal.locked{background:#f0f5fa}.medal .emoji{font-size:28px}.medal small{display:block;font-size:11px;font-weight:900}.footer{text-align:center;font-size:11px;color:#155d85;font-weight:900;padding:20px 8px 0}
+@media(min-width:700px){.grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.island{min-height:130px}.pane{padding:20px}}@media(max-width:380px){.grid{gap:8px}.island{min-height:98px}.island .emoji{font-size:29px}.island small{font-size:10px}}
+
+.profile-screen{max-width:680px;margin:18px auto;padding:0 16px 30px}.profile-card{background:#ffffffed;border:1px solid #d4e9ff;border-radius:22px;padding:22px;box-shadow:0 5px 18px #234c7110;text-align:center}.profile-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:18px 0}.profile-choice{background:linear-gradient(180deg,#fff,#eaf6ff);border:2px solid #cce4fa;border-radius:16px;padding:16px 8px;color:#24456f;font-weight:1000}.profile-choice .avatar{font-size:34px;display:block}.profile-form{display:flex;gap:8px;max-width:440px;margin:12px auto}.profile-form input{min-width:0;flex:1;border:2px solid #cce4fa;border-radius:12px;padding:12px;font:inherit}.avatar-picker{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin:10px auto 14px}.avatar-option{font-size:25px;background:#fff;border:2px solid #cce4fa;border-radius:12px;width:45px;height:45px}.avatar-option.selected{background:#dff3ff;border-color:#1683ec;box-shadow:0 0 0 2px #1683ec33}.profile-actions{display:flex;justify-content:center;gap:6px;margin-top:10px;flex-wrap:wrap}.profile-actions button{border:1px solid #cce4fa;border-radius:9px;padding:6px 9px;background:#fff;color:#315577;font-size:12px;font-weight:900}.profile-actions .delete-profile{color:#b42318;border-color:#f3c4c4}.sync-note{font-size:12px;color:#66819c;font-weight:800;line-height:1.5}.save-status{font-size:11px;font-weight:800;color:#66819c;max-width:145px}.save-status.saving{color:#946200}.save-status.saved{color:#108657}.save-status.error{color:#b42318}@media(max-width:600px){.save-status{max-width:105px;font-size:10px}}.profilebar{display:flex;align-items:center;gap:8px}.profilebar button{border:1px solid #cce4fa;border-radius:10px;background:#ffffffdd;padding:7px 9px;color:#315577;font-weight:900;font-size:12px}
+
+/* SELECTOR DE NIVELES */
+.level-panel{margin:0 0 14px;text-align:center;background:linear-gradient(135deg,#ffffff,#edf7ff)}
+.level-panel .title{margin-bottom:5px}.level-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;background:#deedfc;padding:6px;border-radius:17px;margin:12px auto 6px;max-width:760px}
+.level-button{border:2px solid transparent;background:#f5faff;border-radius:12px;padding:11px 5px;color:#395d80;font-weight:1000;font-size:13px;min-height:52px}
+.level-button.active{background:#1378d5;color:#fff;border-color:#0857a0;box-shadow:0 3px #0757a0}
+.level-subtitle{min-height:19px;font-weight:900;color:#355e84;font-size:12px}
+.mode-name{font-size:12px;color:#1769a8;font-weight:1000;white-space:nowrap}
+.answer-panel{max-width:450px;margin:4px auto 0}.answer-input{display:block;width:100%;border:3px solid #7ebaf2;border-radius:16px;text-align:center;padding:12px;font-size:36px;font-weight:1000;color:#184b7d;background:#fff;appearance:textfield}
+.answer-tools{display:flex;gap:8px;margin-top:10px;justify-content:center}.answer-tools>*{flex:1}
+.write-panel{max-width:560px;margin:0 auto}.write-instruction{font-size:12px;color:#436989;font-weight:900;margin:4px 0 10px}
+.write-surface{border:3px dashed #6baff0;border-radius:17px;background:#fff;overflow:hidden;box-shadow:inset 0 2px 9px #bfdafa55}
+#handCanvas{display:block;width:100%;height:auto;aspect-ratio:2 / 1;touch-action:none;cursor:crosshair}
+.write-actions{display:flex;gap:8px;margin-top:10px}.write-actions button{flex:1;min-width:0}.recognition{margin-top:11px;border:2px solid #b8daf7;border-radius:12px;padding:10px;background:#f0f8ff;color:#24517d;font-weight:900}.recognition-actions{display:flex;gap:8px;justify-content:center;margin-top:9px}.recognition-actions button{flex:1;max-width:230px}
+@media(max-width:420px){.level-button{font-size:11px;padding:10px 3px}.level-panel{padding:10px}.level-buttons{gap:4px;padding:4px}.mode-name{font-size:11px}.write-actions button{padding:12px 8px}}
+</style>
+</head>
+<body>
+<header><div><div class="eyebrow">JUEGO DE AVENTURAS</div><div class="logo">🗺️ SUMAVENTURAS</div><div class="subtitle">¡Conviértete en un héroe de las sumas!</div></div><div class="coins"><span id="coinLabel">⭐ MONEDAS · NIVEL 1</span><div id="coins" style="font-size:24px">0</div></div></header>
+<section id="profileScreen" class="profile-screen">
+ <div class="profile-card"><div style="font-size:54px">🗺️</div><div class="title" style="font-size:27px">¿Quién va a jugar?</div><p class="muted">Elige tu aventurero para continuar con sus monedas y medallas.</p>
+ <div id="profileList" class="profile-list"></div>
+ <div class="title" id="profileFormTitle" style="font-size:17px">➕ Crear jugador</div><form id="profileForm"><div class="avatar-picker" id="avatarPicker" aria-label="Elige un avatar"></div><div class="profile-form"><input id="profileName" maxlength="18" placeholder="Nombre o apodo" autocomplete="off" required><button class="blue" id="profileSubmit" type="submit">Crear</button><button class="smallbtn hidden" id="cancelEdit" type="button">Cancelar</button></div></form>
+ <div id="profileMessage" class="sync-note" aria-live="polite">Preparando tus aventuras…</div>
+ </div>
+</section>
+<div id="gameApp" class="hidden">
+<main>
+<div class="nav"><div class="profilebar"><span id="activeProfile" style="font-weight:1000">🧒 Jugador</span><span id="saveStatus" class="save-status" aria-live="polite">☁️ Preparado</span><button id="switchProfile">Cambiar jugador</button></div><button id="mapNav" class="active">🗺️ Mundos</button><button id="trophyNav">🏆 Trofeos</button><div id="rank" class="rank">🌱 Explorador</div></div>
+<section id="mapScreen" class="screen active">
+<div class="pane intro"><div class="mascots">🦊 🧭 🐾</div><div class="title">¡Elige tu próximo destino!</div><div class="muted">Cada isla es una tabla. ¡Consigue hasta 3 estrellas y mejora tu medalla!</div></div>
+<div class="pane level-panel"><div class="title">🎮 Elige cómo jugar</div><div class="level-buttons" role="group" aria-label="Selecciona el nivel de juego">
+<button type="button" class="level-button active" data-level="1" aria-pressed="true">⭐ 1 · Elegir</button><button type="button" class="level-button" data-level="2" aria-pressed="false">⌨️ 2 · Teclado</button><button type="button" class="level-button" data-level="3" aria-pressed="false">✍️ 3 · A mano</button>
+</div><div id="levelSubtitle" class="level-subtitle">Selecciona la respuesta entre cuatro opciones.</div><div class="muted">Cada nivel tiene sus propias estrellas, medallas, monedas y récords.</div></div>
+<div id="islands" class="grid"></div>
+<div class="pane info"><div class="emoji">🎒</div><div><b>Tu misión de hoy</b><div class="muted">Practica una tabla, gana monedas y colecciona medallas. ¡Tú puedes!</div></div><div style="margin-left:auto;font-size:28px">⭐</div></div>
+</section>
+<section id="gameScreen" class="screen">
+<div class="pane"><div class="gamehead"><button id="back" class="smallbtn">← Mapa</button><div style="text-align:center"><b id="worldName">🏴‍☠️ Isla pirata</b><div id="gameModeName" class="mode-name">⭐ Nivel 1 · Elegir</div></div><b id="round">1/10</b></div><div class="progress"><span id="progress" style="width:0%"></span></div></div>
+<div class="pane challenge"><div id="scene" class="scene">🏴‍☠️</div><div id="story" class="muted">¡Resuelve la suma para encontrar el tesoro!</div><div id="equation" class="equation">2 + 1 = ?</div><div id="hintVisual" class="pane hidden" style="margin:0 0 12px;background:#fff8e8;border:2px dashed #e6b75d"><b id="hintTitle">🧩 Cuenta los elementos:</b><div id="hintGroups" style="display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:25px;margin:8px 0"></div><div id="hintEquation" class="muted"></div></div><div id="answers" class="answers"></div>
+<form id="typingPanel" class="answer-panel hidden" autocomplete="off"><label class="muted" for="typedAnswer">Escribe aquí el resultado:</label><input id="typedAnswer" class="answer-input" type="text" inputmode="numeric" maxlength="2" pattern="[0-9]*" placeholder="¿Cuánto es?" aria-label="Resultado de la suma"><div class="answer-tools"><button type="button" id="clearTyped" class="wood">⌫ Borrar</button><button type="submit" id="checkTyped" class="blue">✓ Comprobar</button></div></form>
+<div id="writingPanel" class="write-panel hidden"><div class="write-instruction">✍️ Escribe el resultado con el dedo, el ratón o un lápiz digital.</div><div class="write-surface"><canvas id="handCanvas" width="640" height="320" aria-label="Zona para escribir a mano el resultado"></canvas></div><div class="write-actions"><button type="button" class="wood" id="handClear">⌫ Borrar</button><button type="button" class="blue" id="handCheck">✓ Comprobar</button></div><div id="recognition" class="recognition hidden" aria-live="polite"><div id="recognitionText"></div><div class="recognition-actions"><button type="button" id="handEdit" class="wood">↺ No, borrar</button><button type="button" id="handConfirm" class="blue">✓ Sí, es ese</button></div></div><div class="muted" style="margin-top:8px">Primero comprobaremos qué número se ha leído. Confirmarlo evita perder intentos por errores de reconocimiento.</div></div>
+<div class="muted" style="margin-top:10px">⭐⭐⭐ 27–30 puntos · ⭐⭐ 20–26 puntos · ⭐ 1–19 puntos</div><div id="feedback" class="feedback" aria-live="polite"></div><button id="next" class="blue full hidden">¡Siguiente reto! ➜</button>
+<div id="finish" class="hidden"><div id="finishIcon" style="font-size:64px">🏆</div><div id="finishTitle" class="title" style="font-size:25px">¡Misión cumplida!</div><div id="finishDesc" class="muted" style="margin:12px 0"></div><div id="medal" style="font-size:36px;margin-bottom:14px"></div><button id="replay" class="wood">🔁 Volver a jugar</button> <button id="finishMap" class="blue">🗺️ Mapa</button></div></div>
+</section>
+<section id="trophyScreen" class="screen">
+<div class="pane"><div class="title">🏆 Sala de trofeos</div><div id="trophyLevelName" class="mode-name">Nivel 1 · Elegir</div><div class="muted">¡Colecciona estrellas, medallas y supera tus récords!</div><div class="stats"><div class="stat"><div style="font-size:26px">🪙</div><b id="statCoins">0</b><div class="muted">Monedas</div></div><div class="stat"><div style="font-size:26px">🏅</div><b id="statMedals">0/10</b><div class="muted">Medallas</div></div><div class="stat"><div style="font-size:26px">⭐</div><b id="statStars">0/30</b><div class="muted">Estrellas</div></div><div class="stat"><div style="font-size:26px">🎯</div><b id="statCorrect">0</b><div class="muted">Aciertos</div></div></div><div id="globalAwardPanel" class="pane hidden" style="margin-top:12px;text-align:center;background:linear-gradient(135deg,#fff5ce,#ffe49a);border:2px solid #e4b64d"><div style="font-size:42px">👑🏆</div><b>¡Gran Aventurero!</b><div class="muted">Has completado los 10 mundos de este nivel. ¡50 monedas extra!</div></div></div>
+<div class="pane" style="margin-top:12px"><b>🌎 Tus mundos</b><div id="medalGrid" class="medalgrid" style="margin-top:12px"></div></div><button id="trophyBack" class="blue full">← Volver al mapa</button>
+</section>
+<div class="footer">🌈 ¡Un pequeño héroe aprende una suma cada vez! 🌈</div>
+</main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+(() => {
+const $=id=>document.getElementById(id);
+const SUPABASE_URL=(window.SUMAVENTURAS_CONFIG||{}).url||'';const SUPABASE_KEY=(window.SUMAVENTURAS_CONFIG||{}).anonKey||'';let supabaseClient=null;let profiles=[];let activeProfile=null;let selectedAvatar='🦊';let editingProfileId=null;const AVATARS=['🦊','🦕','🚀','🐬','🐉','🦄','🐯','🐼','🐱','🐶','🐸','🐵','🐧','🐢','🦋','🐙','🦖','🦁'];
+const worlds=[
+{name:'Dinosaurios',e:'🦕',bg:'linear-gradient(150deg,#54bf72,#16885d)',scene:'🦖',story:'Ayuda al dinosaurio a encontrar sus huevos',hint:'🥚',thing:'huevos'},
+{name:'Isla pirata',e:'🏴‍☠️',bg:'linear-gradient(150deg,#32bce9,#1768b5)',scene:'🦜',story:'¡Encuentra el cofre del capitán!',hint:'💎',thing:'gemas'},
+{name:'Desierto',e:'🏜️',bg:'linear-gradient(150deg,#f8cb68,#e38b42)',scene:'🐪',story:'¡Descifra el mapa de las momias!',hint:'🏺',thing:'vasijas'},
+{name:'Mundo helado',e:'🐧',bg:'linear-gradient(150deg,#8ae4f4,#478bd8)',scene:'🐧',story:'Ayuda al pingüino a cruzar el hielo',hint:'❄️',thing:'copos de nieve'},
+{name:'Selva mágica',e:'🦊',bg:'linear-gradient(150deg,#62dba0,#14885d)',scene:'🦜',story:'Busca las gemas escondidas',hint:'🍃',thing:'hojas'},
+{name:'Galaxia',e:'🚀',bg:'linear-gradient(150deg,#9973ee,#4331a4)',scene:'👽',story:'¡Carga el cohete para despegar!',hint:'⭐',thing:'estrellas'},
+{name:'Castillo',e:'🏰',bg:'linear-gradient(150deg,#f69bcb,#a25cda)',scene:'🧙',story:'Ayuda al mago con su hechizo',hint:'✨',thing:'destellos mágicos'},
+{name:'Dragones',e:'🐉',bg:'linear-gradient(150deg,#fa9b52,#cf483d)',scene:'🐲',story:'¡Consigue gemas para el dragón!',hint:'🔥',thing:'llamas'},
+{name:'Océano',e:'🐬',bg:'linear-gradient(150deg,#45d5dd,#087bbd)',scene:'🐬',story:'¡Busca perlas bajo el mar!',hint:'🫧',thing:'burbujas'}
+,{name:'Valle de los Gemelos',label:'Dobles',e:'🪞',bg:'linear-gradient(150deg,#c188ef,#6750c7)',scene:'👯',story:'¡Encuentra las parejas gemelas!',hint:'💎',thing:'gemas gemelas',doubles:true}
+];
+// La estructura original del progreso SE CONSERVA: sus campos raíz son el Nivel 1.
+// Los niveles 2 y 3 se guardan en progress.level2 y progress.level3, sin cambiar Supabase.
+function emptyProgress(){return {coins:0,medals:[],correct:0,played:0,levelRecords:{},globalAward:false}}
+function normalizeLevel(raw){
+ const s=raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{};
+ return {...emptyProgress(),...s,coins:Number.isFinite(+s.coins)?+s.coins:0,correct:Number.isFinite(+s.correct)?+s.correct:0,played:Number.isFinite(+s.played)?+s.played:0,medals:Array.isArray(s.medals)?s.medals:[],levelRecords:s.levelRecords&&typeof s.levelRecords==='object'&&!Array.isArray(s.levelRecords)?s.levelRecords:{},globalAward:!!s.globalAward};
+}
+function normalizeProgress(raw){const root=normalizeLevel(raw);return {...root,level2:normalizeLevel(raw&&raw.level2),level3:normalizeLevel(raw&&raw.level3)}}
+let data=normalizeProgress(null);
+let selectedLevel=1,playingLevel=1;
+function progressAt(level=selectedLevel){return level===1?data:level===2?data.level2:data.level3}
+function profileSaveKey(id){return 'sumaventuras-profile-'+id}
+function profileLevelKey(id){return 'sumaventuras-level-'+id}
+function loadLocal(id,fallback=null){try{const s=JSON.parse(localStorage.getItem(profileSaveKey(id))||'null');return normalizeProgress(s||fallback)}catch(e){return normalizeProgress(fallback)}}
+let saveQueue=Promise.resolve();let saveVersion=0;let savedVersion=0;let lastSaveError=null;
+function setSaveStatus(message,state=''){const el=$('saveStatus');if(!el)return;el.textContent=message;el.className='save-status'+(state?' '+state:'')}
+function save(){
+ if(!activeProfile)return Promise.resolve(false);
+ const profileId=activeProfile.id;const snapshot=JSON.stringify(data);const version=++saveVersion;
+ try{localStorage.setItem(profileSaveKey(profileId),snapshot)}catch(e){console.warn('No se pudo guardar localmente',e)}
+ if(!supabaseClient){setSaveStatus('💾 Guardado en este dispositivo');return Promise.resolve(true)}
+ setSaveStatus('☁️ Guardando…','saving');
+ saveQueue=saveQueue.catch(()=>{}).then(async()=>{
+   if(!activeProfile||activeProfile.id!==profileId)return false;
+   const progress=JSON.parse(snapshot);
+   const {error}=await supabaseClient.from('sumaventuras_profiles').update({progress,updated_at:new Date().toISOString()}).eq('id',profileId);
+   if(error){lastSaveError=error;console.warn('No se pudo sincronizar',error);if(version===saveVersion)setSaveStatus('⚠️ No se ha guardado en internet','error');return false}
+   savedVersion=Math.max(savedVersion,version);lastSaveError=null;
+   if(version===saveVersion)setSaveStatus('☁️ Progreso sincronizado','saved');
+   return true;
+ });
+ return saveQueue;
+}
+function saveOnHide(){if(!activeProfile)return;try{localStorage.setItem(profileSaveKey(activeProfile.id),JSON.stringify(data))}catch(e){};if(supabaseClient&&savedVersion<saveVersion)save()}
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')saveOnHide()});
+window.addEventListener('pagehide',saveOnHide);
+window.addEventListener('beforeunload',()=>{if(activeProfile){try{localStorage.setItem(profileSaveKey(activeProfile.id),JSON.stringify(data))}catch(e){};if(supabaseClient&&savedVersion<saveVersion){supabaseClient.from('sumaventuras_profiles').update({progress:data,updated_at:new Date().toISOString()}).eq('id',activeProfile.id)}}});
+
+let table=1,round=0,correctThis=0,locked=false,order=[],answer=0,attempts=0,coinsEarnedThis=0,scoreThis=0;
+const LEVEL_NAMES={1:'⭐ Nivel 1 · Elegir',2:'⌨️ Nivel 2 · Teclado',3:'✍️ Nivel 3 · A mano'};
+const LEVEL_DESCS={1:'Selecciona la respuesta entre cuatro opciones.',2:'Escribe la respuesta con el teclado numérico.',3:'Dibuja el número, pulsa Comprobar y confirma la lectura.'};
+function completedLevels(level=selectedLevel){const records=progressAt(level).levelRecords;return worlds.filter((w,i)=>records[i+1]&&records[i+1].stars>0).length}
+function rank(){const n=completedLevels();return n>=10?'👑 Maestro de las sumas':n>=5?'🦸 Superhéroe':n?'🧭 Aventurero':'🌱 Explorador'}
+function medalForStars(stars){return stars>=3?'🥇 Oro':stars===2?'🥈 Plata':stars===1?'🥉 Bronce':'—'}
+function starsForScore(score){return score>=27?3:score>=20?2:score>0?1:0}
+function stats(){
+ const p=progressAt();$('coins').textContent=p.coins;$('coinLabel').textContent='⭐ MONEDAS · NIVEL '+selectedLevel;
+ $('rank').textContent=rank();$('statCoins').textContent=p.coins;$('statMedals').textContent=completedLevels()+'/10';
+ $('statStars').textContent=worlds.reduce((n,w,i)=>n+(p.levelRecords[i+1]?.stars||0),0)+'/30';
+ $('statCorrect').textContent=p.correct;$('globalAwardPanel').classList.toggle('hidden',!p.globalAward);
+ $('trophyLevelName').textContent=LEVEL_NAMES[selectedLevel];
+ $('medalGrid').innerHTML=worlds.map((w,i)=>{const r=p.levelRecords[i+1];const stars=r?r.stars:0;return `<div class="medal ${stars?'':'locked'}"><div class="emoji" style="${stars?'':'filter:grayscale(1);opacity:.45'}">${w.e}</div><small>${w.doubles?'Dobles':(i+1)+'. '+w.name}</small><div>${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</div><small>${r?medalForStars(stars)+' · Récord '+r.score+'/30':'Sin completar'}</small></div>`}).join('');
+}
+function drawMap(){
+ const p=progressAt();
+ $('islands').innerHTML=worlds.map((w,i)=>{const r=p.levelRecords[i+1];const stars=r?r.stars:0;const medal=stars>=3?'🥇':stars===2?'🥈':stars===1?'🥉':'🔒';return `<button class="island" data-table="${i+1}" style="background:${w.bg}" aria-label="${w.name}. Nivel ${selectedLevel}. ${stars} estrellas. ${r?'Récord '+r.score+' de 30':'Sin récord'}"><span class="emoji">${w.e}</span><span class="num" style="${w.doubles?'width:auto;padding:0 8px;font-size:10px':''}">${w.doubles?'DOBLES':i+1}</span><small>${w.name}</small><span class="map-awards"><span class="map-medal" aria-label="${stars?('Medalla conseguida, '+(stars===3?'oro':stars===2?'plata':'bronce')):'Sin medalla'}">${medal}</span><span aria-label="${stars} de 3 estrellas">${'⭐'.repeat(stars)}${'☆'.repeat(3-stars)}</span><span aria-label="Récord ${r?r.score+'/30':'sin récord'}">🏆 ${r?r.score+'/30':'—'}</span></span></button>`}).join('');
+ document.querySelectorAll('[data-table]').forEach(b=>b.onclick=()=>start(+b.dataset.table));stats();
+}
+function setLevel(n){
+ if(![1,2,3].includes(n))return;
+ selectedLevel=n;
+ document.querySelectorAll('[data-level]').forEach(b=>{const active=+b.dataset.level===n;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active))});
+ $('levelSubtitle').textContent=LEVEL_DESCS[n];
+ if(activeProfile){try{localStorage.setItem(profileLevelKey(activeProfile.id),String(n))}catch(e){}}
+ drawMap();
+}
+document.querySelectorAll('[data-level]').forEach(b=>b.addEventListener('click',()=>setLevel(+b.dataset.level)));
+function show(screen){['map','game','trophy'].forEach(s=>$(s+'Screen').classList.toggle('active',s===screen));$('mapNav').classList.toggle('active',screen==='map');$('trophyNav').classList.toggle('active',screen==='trophy');if(screen==='trophy')stats()}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function start(n){
+ playingLevel=selectedLevel;table=n;round=0;correctThis=0;coinsEarnedThis=0;scoreThis=0;
+ order=worlds[n-1].doubles?shuffle(Array.from({length:11},(_,i)=>i)).slice(0,10):shuffle(Array.from({length:10},(_,i)=>i+1));
+ $('finish').classList.add('hidden');$('answers').classList.add('hidden');$('typingPanel').classList.add('hidden');$('writingPanel').classList.add('hidden');
+ $('scene').textContent=worlds[n-1].scene;$('worldName').textContent=worlds[n-1].e+' '+worlds[n-1].name;
+ $('gameModeName').textContent=LEVEL_NAMES[playingLevel];show('game');question();
+}
+function question(){
+ attempts=0;locked=false;$('next').classList.add('hidden');$('feedback').textContent='';$('hintVisual').classList.add('hidden');$('hintGroups').innerHTML='';$('hintEquation').textContent='';
+ $('round').textContent=(round+1)+'/10';$('progress').style.width=(round*10)+'%';
+ const b=order[round],doubleMode=!!worlds[table-1].doubles;answer=doubleMode?2*b:table+b;
+ $('story').textContent=worlds[table-1].story+' · Reto '+(round+1);
+ $('equation').textContent=doubleMode?`${b} + ${b} = ?`:`${table} + ${b} = ?`;
+ $('answers').classList.toggle('hidden',playingLevel!==1);$('typingPanel').classList.toggle('hidden',playingLevel!==2);$('writingPanel').classList.toggle('hidden',playingLevel!==3);
+ if(playingLevel===1){
+   const opts=new Set([answer]);while(opts.size<4){const v=answer+Math.floor(Math.random()*9)-4;if(v>=0&&v<=20)opts.add(v)}
+   $('answers').innerHTML=shuffle([...opts]).map(v=>`<button class="ans" data-answer="${v}">${v}</button>`).join('');
+   document.querySelectorAll('[data-answer]').forEach(b=>b.onclick=()=>check(+b.dataset.answer,b));
+ }else if(playingLevel===2){$('typedAnswer').disabled=false;$('typedAnswer').value='';$('checkTyped').disabled=false;$('clearTyped').disabled=false;}
+ else {clearHand();setWritingDisabled(false)}
+}
+function lockInputs(){
+ document.querySelectorAll('[data-answer]').forEach(b=>b.disabled=true);
+ $('typedAnswer').disabled=true;$('checkTyped').disabled=true;$('clearTyped').disabled=true;
+ setWritingDisabled(true);
+}
+function check(v,btn=null){
+ if(locked)return;
+ const ok=v===answer;
+ if(ok){
+   locked=true;correctThis++;const p=progressAt(playingLevel);p.correct++;
+   const reward=attempts===0?10:attempts===1?6:3;coinsEarnedThis+=reward;p.coins+=reward;scoreThis+=attempts===0?3:attempts===1?2:1;
+   $('feedback').style.color='#108657';
+   $('feedback').textContent=attempts===0?'✨ ¡Increíble! ¡A la primera! +10 monedas':attempts===1?'🎉 ¡Lo has conseguido al segundo intento! +6 monedas':'💡 ¡Muy bien! Has usado la pista y lo has conseguido. +3 monedas';
+   if(btn){btn.style.background='#d7fbe4';btn.style.borderColor='#31b875'}
+   lockInputs();p.played++;save();stats();round++;$('progress').style.width=(round*10)+'%';
+   if(round>=10)finish();else $('next').classList.remove('hidden');return;
+ }
+ attempts++;
+ if(btn){btn.disabled=true;btn.style.background='#ffeddd';btn.style.borderColor='#e6a16c'}
+ if(playingLevel===2)$('typedAnswer').value='';
+ if(playingLevel===3){clearHand()}
+ if(attempts===1){$('feedback').style.color='#bb6834';$('feedback').textContent='🌟 ¡Casi, explorador! Equivocarse es aprender. ¡Prueba otra vez!';return}
+ if(attempts===2){
+   const w=worlds[table-1],symbol=w.hint;const group=n=>'<div style="padding:8px;background:#fff;border-radius:12px;min-width:92px;max-width:44%"><div style="display:flex;justify-content:center;gap:3px;flex-wrap:wrap;line-height:1.25">'+symbol.repeat(n)+'</div><small style="font-size:11px;font-weight:900">'+n+'</small></div>';
+   const doubleMode=!!w.doubles,first=doubleMode?order[round]:table,second=order[round];
+   $('feedback').style.color='#bb6834';$('feedback').textContent='🧭 ¡Una pista del mundo '+w.name+'! Cuenta los '+w.thing+' de cada grupo y júntalos. ¡Tú puedes!';
+   $('hintTitle').textContent=symbol+' Cuenta los '+w.thing+':';$('hintGroups').innerHTML=group(first)+'<b style="font-size:24px">+</b>'+group(second);
+   $('hintEquation').textContent=first+' + '+second+' = ¿cuántos '+w.thing+' hay en total?';$('hintVisual').classList.remove('hidden');return;
+ }
+ locked=true;
+ const b=order[round],expression=worlds[table-1].doubles?`${b} + ${b}`:`${table} + ${b}`;
+ $('feedback').style.color='#bb6834';$('feedback').textContent='💛 ¡Buen esfuerzo! La respuesta es '+expression+' = '+answer+'. ¡Ya sabes una más!';
+ document.querySelectorAll('[data-answer]').forEach(b=>{if(+b.dataset.answer===answer){b.style.background='#d7fbe4';b.style.borderColor='#31b875'}});
+ lockInputs();const p=progressAt(playingLevel);p.played++;save();stats();round++;$('progress').style.width=(round*10)+'%';
+ if(round>=10)finish();else $('next').classList.remove('hidden');
+}
+$('typingPanel').addEventListener('submit',e=>{
+ e.preventDefault();if(locked||playingLevel!==2)return;
+ const raw=$('typedAnswer').value.trim();
+ if(!/^\d{1,2}$/.test(raw)||+raw>20){$('feedback').style.color='#bb6834';$('feedback').textContent='✏️ Escribe un número del 0 al 20 para comprobarlo.';return}
+ check(+raw);
+});
+$('typedAnswer').addEventListener('input',()=>{$('typedAnswer').value=$('typedAnswer').value.replace(/[^0-9]/g,'').slice(0,2)});
+$('clearTyped').onclick=()=>{$('typedAnswer').value='';$('typedAnswer').focus()};
+
+/* RECONOCIMIENTO DE ESCRITURA: sin envío de dibujos a servidores externos.
+   Compara el dibujo con muestras de números 0-20 representadas localmente;
+   requiere confirmación del número leído ANTES de consumir un intento. */
+const handCanvas=$('handCanvas'),handCtx=handCanvas.getContext('2d');
+let handStrokes=[],activeStroke=null,handDisabled=false,handPointer=null,pendingRecognition=null;
+function drawHand(){
+ handCtx.clearRect(0,0,handCanvas.width,handCanvas.height);
+ handCtx.strokeStyle='#176cce';handCtx.fillStyle='#176cce';handCtx.lineWidth=14;handCtx.lineCap='round';handCtx.lineJoin='round';
+ for(const stroke of handStrokes){if(!stroke.length)continue;handCtx.beginPath();handCtx.moveTo(stroke[0].x,stroke[0].y);
+   if(stroke.length===1){handCtx.arc(stroke[0].x,stroke[0].y,7,0,Math.PI*2);handCtx.fill()}
+   else {for(let i=1;i<stroke.length;i++)handCtx.lineTo(stroke[i].x,stroke[i].y);handCtx.stroke()}
+ }
+}
+function pointerXY(e){const r=handCanvas.getBoundingClientRect();return {x:Math.min(handCanvas.width,Math.max(0,(e.clientX-r.left)*handCanvas.width/r.width)),y:Math.min(handCanvas.height,Math.max(0,(e.clientY-r.top)*handCanvas.height/r.height))}}
+handCanvas.addEventListener('pointerdown',e=>{if(handDisabled||playingLevel!==3||locked)return;e.preventDefault();handPointer=e.pointerId;handCanvas.setPointerCapture(e.pointerId);activeStroke=[pointerXY(e)];handStrokes.push(activeStroke);pendingRecognition=null;$('recognition').classList.add('hidden');drawHand()});
+handCanvas.addEventListener('pointermove',e=>{if(handDisabled||e.pointerId!==handPointer||!activeStroke)return;e.preventDefault();activeStroke.push(pointerXY(e));drawHand()});
+function stopHand(e){if(handPointer===e.pointerId){activeStroke=null;handPointer=null}}
+handCanvas.addEventListener('pointerup',stopHand);handCanvas.addEventListener('pointercancel',stopHand);
+function clearHand(){handStrokes=[];activeStroke=null;handPointer=null;pendingRecognition=null;$('recognition').classList.add('hidden');drawHand()}
+function setWritingDisabled(disabled){handDisabled=disabled;$('handCheck').disabled=disabled;$('handClear').disabled=disabled;$('handConfirm').disabled=disabled;$('handEdit').disabled=disabled}
+$('handClear').onclick=clearHand;$('handEdit').onclick=clearHand;
+const OCR_SIZE=28;let numberTemplates=null;
+function normalizeInk(canvas){
+ const c=canvas.getContext('2d',{willReadFrequently:true}),w=canvas.width,h=canvas.height,p=c.getImageData(0,0,w,h).data;
+ let minx=w,miny=h,maxx=-1,maxy=-1;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){if(p[(y*w+x)*4+3]>55){minx=Math.min(minx,x);miny=Math.min(miny,y);maxx=Math.max(maxx,x);maxy=Math.max(maxy,y)}}
+ if(maxx<0)return null;
+ const iw=maxx-minx+1,ih=maxy-miny+1,t=document.createElement('canvas');t.width=t.height=OCR_SIZE;
+ const ctx=t.getContext('2d',{willReadFrequently:true});const scale=Math.min(24/iw,24/ih),dw=iw*scale,dh=ih*scale;
+ ctx.drawImage(canvas,minx,miny,iw,ih,(OCR_SIZE-dw)/2,(OCR_SIZE-dh)/2,dw,dh);
+ const px=ctx.getImageData(0,0,OCR_SIZE,OCR_SIZE).data,mask=new Uint8Array(OCR_SIZE*OCR_SIZE);
+ let count=0;for(let i=0;i<mask.length;i++){if(px[4*i+3]>75){mask[i]=1;count++}}
+ return {mask,count,aspect:iw/ih};
+}
+function distanceInk(mask){
+ const N=OCR_SIZE,d=new Float32Array(N*N);for(let i=0;i<d.length;i++)d[i]=mask[i]?0:20;
+ for(let y=0;y<N;y++)for(let x=0;x<N;x++){const i=y*N+x;if(x)d[i]=Math.min(d[i],d[i-1]+1);if(y)d[i]=Math.min(d[i],d[i-N]+1);if(x&&y)d[i]=Math.min(d[i],d[i-N-1]+1.42);if(x<N-1&&y)d[i]=Math.min(d[i],d[i-N+1]+1.42)}
+ for(let y=N-1;y>=0;y--)for(let x=N-1;x>=0;x--){const i=y*N+x;if(x<N-1)d[i]=Math.min(d[i],d[i+1]+1);if(y<N-1)d[i]=Math.min(d[i],d[i+N]+1);if(x<N-1&&y<N-1)d[i]=Math.min(d[i],d[i+N+1]+1.42);if(x&&y<N-1)d[i]=Math.min(d[i],d[i+N-1]+1.42)}
+ return d;
+}
+function buildNumberTemplates(){
+ if(numberTemplates)return numberTemplates;
+ const list=[],tmp=document.createElement('canvas');tmp.width=300;tmp.height=165;const c=tmp.getContext('2d');
+ const fonts=['Arial','Trebuchet MS','Georgia','Courier New','Comic Sans MS'];
+ for(let num=0;num<=20;num++)for(const font of fonts)for(const angle of [-0.13,0,0.13])for(const weight of ['normal','bold']){
+   c.clearRect(0,0,tmp.width,tmp.height);c.save();c.translate(tmp.width/2,tmp.height/2);
+   c.rotate(angle);c.fillStyle='#000';c.font=`${weight} 112px "${font}"`;c.textAlign='center';c.textBaseline='middle';c.fillText(String(num),0,0);c.restore();
+   const obj=normalizeInk(tmp);if(obj&&obj.count>8)list.push({...obj,value:num,dist:distanceInk(obj.mask)});
+ }
+ numberTemplates=list;return list;
+}
+function readHandwrittenNumber(){
+ const pts=handStrokes.flat();if(pts.length<3)return null;
+ const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),w=Math.max(...xs)-Math.min(...xs),h=Math.max(...ys)-Math.min(...ys);
+ if(w<14&&h<24)return null;
+ const sample=normalizeInk(handCanvas);if(!sample||sample.count<9)return null;
+ const candidates=buildNumberTemplates(),distance=distanceInk(sample.mask);
+ let best={score:Infinity,value:null},runner={score:Infinity,value:null};
+ // Mantener el mejor resultado por CADA número, evitando comparar variantes del mismo.
+ const bestByValue=Array(21).fill(Infinity);
+ for(const t of candidates){
+   let a=0,b=0;for(let i=0;i<sample.mask.length;i++){if(sample.mask[i])a+=t.dist[i];if(t.mask[i])b+=distance[i]}
+   const shape=a/sample.count*.58+b/t.count*.42;
+   const aspectPenalty=Math.abs(Math.log(Math.max(.1,sample.aspect)/Math.max(.1,t.aspect)))*.20;
+   const score=shape+aspectPenalty;
+   if(score<bestByValue[t.value])bestByValue[t.value]=score;
+ }
+ bestByValue.forEach((score,value)=>{if(score<best.score){runner=best;best={score,value}}else if(score<runner.score){runner={score,value}}});
+ return best.value===null?null:{value:best.value,score:best.score,margin:runner.score-best.score};
+}
+$('handCheck').onclick=()=>{
+ if(locked||playingLevel!==3||handDisabled)return;
+ const parsed=readHandwrittenNumber();
+ if(!parsed||parsed.score>4.7){$('feedback').style.color='#bb6834';$('feedback').textContent='✍️ No he podido leer el número. Escríbelo más grande o pulsa Borrar; no pierdes ningún intento.';return}
+ pendingRecognition=parsed.value;
+ $('recognitionText').textContent='🔎 Creo que has escrito: '+parsed.value+'. ¿Es correcto?';
+ $('recognition').classList.remove('hidden');
+ $('feedback').textContent='Si no he leído bien tu número, pulsa «No, borrar». No perderás intentos.';
+ $('feedback').style.color='#275b88';
+};
+$('handConfirm').onclick=()=>{if(locked||playingLevel!==3||pendingRecognition===null)return;const v=pendingRecognition;pendingRecognition=null;$('recognition').classList.add('hidden');check(v)};
+function finish(){
+ $('answers').classList.add('hidden');$('typingPanel').classList.add('hidden');$('writingPanel').classList.add('hidden');$('next').classList.add('hidden');$('finish').classList.remove('hidden');
+ const p=progressAt(playingLevel),stars=starsForScore(scoreThis),medal=medalForStars(stars),previous=p.levelRecords[table];
+ const isRecord=!previous||stars>previous.stars||(stars===previous.stars&&scoreThis>previous.score);
+ if(isRecord)p.levelRecords[table]={stars,score:scoreThis,medal:medal.replace(/^🥇 |^🥈 |^🥉 /,''),correct:correctThis,updatedAt:new Date().toISOString()};
+ $('finishIcon').textContent=stars===3?'🏆':stars===2?'🥈':stars===1?'🥉':'💛';
+ $('finishTitle').textContent=stars===3?'¡Nivel perfecto!':stars===2?'¡Medalla de plata!':stars===1?'¡Medalla de bronce!':'¡A seguir practicando!';
+ $('finishDesc').textContent='Has acertado '+correctThis+' de 10 sumas y ganado '+coinsEarnedThis+' monedas. Puntuación: '+scoreThis+'/30. '+(stars===3?'¡Todas las sumas a la primera, qué maravilla!':stars===2?'¡Muy bien! Ya estás cerca de las 3 estrellas.':stars===1?'¡Has terminado! Practicar te ayudará a conseguir más estrellas.':'Puedes repetir el destino para conseguir más estrellas.');
+ $('medal').textContent='⭐'.repeat(stars)+'☆'.repeat(3-stars)+' · '+medal;
+ if(isRecord&&stars>0){$('finishDesc').textContent+=' '+(previous?'¡Nuevo récord personal!':'¡Has conseguido tu primer récord en este destino!')}
+ else if(previous){$('finishDesc').textContent+=' Tu récord sigue siendo '+previous.score+'/30 con '+previous.stars+' estrellas.'}
+ if(stars>=2&&!p.medals.includes(table)){p.medals.push(table);p.coins+=20;$('finishDesc').textContent+=' ¡Primera medalla de plata u oro en este destino: 20 monedas extra!'}
+ if(!p.globalAward&&completedLevels(playingLevel)>=10){p.globalAward=true;p.coins+=50;$('finishDesc').textContent+=' 👑 ¡Gran Aventurero! Has completado los 10 destinos de este nivel y ganas 50 monedas extra.'}
+ save();drawMap();stats();$('progress').style.width='100%';
+}
+$('mapNav').onclick=()=>{drawMap();show('map')};$('trophyNav').onclick=()=>show('trophy');$('back').onclick=()=>{drawMap();show('map')};
+$('trophyBack').onclick=()=>{drawMap();show('map')};$('next').onclick=question;$('replay').onclick=()=>start(table);$('finishMap').onclick=()=>{drawMap();show('map')};
+function setProfileMessage(t){$('profileMessage').textContent=t}
+function renderAvatarPicker(){const picker=$('avatarPicker');picker.innerHTML='';AVATARS.forEach(a=>{const b=document.createElement('button');b.type='button';b.className='avatar-option'+(a===selectedAvatar?' selected':'');b.textContent=a;b.setAttribute('aria-label','Avatar '+a);b.setAttribute('aria-pressed',a===selectedAvatar?'true':'false');b.onclick=()=>{selectedAvatar=a;renderAvatarPicker()};picker.appendChild(b)})}
+function resetProfileForm(){editingProfileId=null;$('profileFormTitle').textContent='➕ Crear jugador';$('profileSubmit').textContent='Crear';$('cancelEdit').classList.add('hidden');$('profileName').value='';selectedAvatar='🦊';renderAvatarPicker()}
+function renderProfiles(){const list=$('profileList');list.innerHTML='';profiles.forEach((p,i)=>{const card=document.createElement('div');card.className='profile-choice';card.innerHTML=`<span class="avatar">${escapeHtml(p.avatar||AVATARS[i%AVATARS.length])}</span><div>${escapeHtml(p.name)}</div><button type="button" class="blue" style="padding:7px 12px;margin-top:8px">▶ Continuar</button><div class="profile-actions"><button type="button" data-edit="${escapeHtml(p.id)}">✏️ Modificar</button><button type="button" class="delete-profile" data-delete="${escapeHtml(p.id)}">🗑️ Eliminar</button></div>`;card.querySelector('.blue').onclick=()=>selectProfile(p);card.querySelector('[data-edit]').onclick=()=>editProfile(p);card.querySelector('[data-delete]').onclick=()=>deleteProfile(p);list.appendChild(card)});if(!profiles.length)list.innerHTML='<div class="muted" style="grid-column:1/-1">Todavía no hay jugadores. ¡Crea el primero!</div>'}
+function escapeHtml(t){return String(t).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function initProfiles(){if(SUPABASE_URL&&SUPABASE_KEY&&window.supabase){supabaseClient=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);const {data:rows,error}=await supabaseClient.from('sumaventuras_profiles').select('id,name,avatar,progress').order('created_at');if(!error){profiles=rows||[];setProfileMessage('☁️ Conectado a internet. El progreso se confirma al guardarse.');}else{setProfileMessage('No se pudo conectar con la nube. Comprueba la configuración de Supabase.');}}else{try{profiles=JSON.parse(localStorage.getItem('sumaventuras-profiles')||'[]')}catch(e){profiles=[]}setProfileMessage('Modo local: para sincronizar entre dispositivos, configura Supabase siguiendo README.md.')}renderProfiles()}
+async function selectProfile(p){activeProfile=p;data=supabaseClient?normalizeProgress(p.progress):loadLocal(p.id,p.progress);if(supabaseClient){const {data:remote,error}=await supabaseClient.from('sumaventuras_profiles').select('progress').eq('id',p.id).single();if(!error&&remote&&remote.progress)data=normalizeProgress(remote.progress)}try{localStorage.setItem(profileSaveKey(p.id),JSON.stringify(data))}catch(e){};$('activeProfile').textContent=(p.avatar||'🧒')+' '+p.name;setSaveStatus(supabaseClient?'☁️ Listo para guardar':'💾 Modo local');$('profileScreen').classList.add('hidden');$('gameApp').classList.remove('hidden');let savedLevel=1;try{savedLevel=+localStorage.getItem(profileLevelKey(p.id))||1}catch(e){}setLevel(savedLevel);show('map')}
+function editProfile(p){editingProfileId=p.id;selectedAvatar=p.avatar||'🦊';$('profileFormTitle').textContent='✏️ Modificar jugador';$('profileSubmit').textContent='Guardar cambios';$('cancelEdit').classList.remove('hidden');$('profileName').value=p.name;renderAvatarPicker();$('profileName').focus();setProfileMessage('Modifica el nombre o el avatar y pulsa Guardar cambios.')}
+async function deleteProfile(p){if(!confirm('¿Seguro que quieres eliminar el perfil de '+p.name+' y todo su progreso? Esta acción no se puede deshacer.'))return;const btn=document.querySelector('[data-delete="'+p.id+'"]');if(btn){btn.disabled=true;btn.textContent='Eliminando…'}setProfileMessage('Eliminando perfil…');if(supabaseClient){try{const {data:deleted,error}=await supabaseClient.from('sumaventuras_profiles').delete().eq('id',p.id).select('id');if(error){console.error('Error al eliminar perfil:',error);setProfileMessage('No se pudo eliminar en internet. Revisa la política DELETE de Supabase; el perfil no se ha quitado de la lista.');if(btn){btn.disabled=false;btn.textContent='🗑️ Eliminar'}return}if(!deleted||deleted.length===0){setProfileMessage('Supabase no confirmó el borrado. El perfil sigue guardado en la nube; revisa la política DELETE antes de volver a intentarlo.');if(btn){btn.disabled=false;btn.textContent='🗑️ Eliminar'}return}}catch(err){console.error('Error inesperado al eliminar perfil:',err);setProfileMessage('Error de conexión al eliminar. El perfil se mantiene en la lista.');if(btn){btn.disabled=false;btn.textContent='🗑️ Eliminar'}return}}profiles=profiles.filter(x=>x.id!==p.id);try{localStorage.removeItem(profileSaveKey(p.id));localStorage.setItem('sumaventuras-profiles',JSON.stringify(profiles))}catch(e){}if(activeProfile&&activeProfile.id===p.id){activeProfile=null;$('gameApp').classList.add('hidden');$('profileScreen').classList.remove('hidden')}if(editingProfileId===p.id)resetProfileForm();renderProfiles();setProfileMessage('Perfil eliminado y confirmado'+(supabaseClient?' en internet.':' en este dispositivo.'));}
+$('cancelEdit').onclick=()=>resetProfileForm();
+$('profileForm').addEventListener('submit',async e=>{e.preventDefault();const name=$('profileName').value.trim();if(!name)return;if(profiles.some(p=>p.name.toLocaleLowerCase()===name.toLocaleLowerCase()&&p.id!==editingProfileId)){setProfileMessage('Ese nombre ya existe. Elige otro nombre.');return}if(editingProfileId){const p=profiles.find(x=>x.id===editingProfileId);if(!p)return;const changes={name,avatar:selectedAvatar};if(supabaseClient){const {error}=await supabaseClient.from('sumaventuras_profiles').update(changes).eq('id',p.id);if(error){setProfileMessage('No se pudieron guardar los cambios en la nube.');return}}Object.assign(p,changes);if(activeProfile&&activeProfile.id===p.id)$('activeProfile').textContent=p.avatar+' '+p.name;try{localStorage.setItem('sumaventuras-profiles',JSON.stringify(profiles))}catch(e){}resetProfileForm();renderProfiles();setProfileMessage('Perfil actualizado correctamente.');return}const profile={id:crypto.randomUUID(),name,avatar:selectedAvatar,progress:normalizeProgress(null)};if(supabaseClient){const {error}=await supabaseClient.from('sumaventuras_profiles').insert(profile);if(error){setProfileMessage('No se pudo crear en la nube. Revisa Supabase.');return}}profiles.push(profile);try{localStorage.setItem('sumaventuras-profiles',JSON.stringify(profiles))}catch(e){}resetProfileForm();renderProfiles();selectProfile(profile)});
+$('switchProfile').onclick=async()=>{await save();activeProfile=null;$('gameApp').classList.add('hidden');$('profileScreen').classList.remove('hidden');initProfiles()};
+renderAvatarPicker();initProfiles();
+})();
+</script>
+</body>
+</html>
