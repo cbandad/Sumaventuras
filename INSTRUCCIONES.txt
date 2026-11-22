@@ -1,0 +1,20 @@
+SUMAVENTURAS — RECONOCIMIENTO MANUSCRITO EN UN SOLO RECUADRO
+
+1. Sube todos los archivos de esta carpeta al repositorio del juego, sustituyendo index.html.
+2. No elimines ni sustituyas config.js.
+3. Prueba el nivel 3, escribiendo respuestas del 0 al 20 en UN ÚNICO recuadro.
+4. Pulsa Comprobar. Confirma si el número leído es correcto; si no, pulsa No, borrar.
+
+COSTES: no se utiliza ningún proveedor de IA de pago ni API facturable.
+El modelo se descarga públicamente y se ejecuta en el navegador.
+La librería TensorFlow.js y el modelo MIT se cargan desde CDN gratuito; esto
+requiere conexión para la primera carga y depende de disponibilidad externa.
+Si la descarga falla, se intenta utilizar el reconocimiento básico anterior.
+No se envían los trazos manuscritos a un servicio de reconocimiento remoto.
+
+Modelo: balkarjun/digit-recognition (licencia MIT)
+https://github.com/balkarjun/digit-recognition
+TensorFlow.js: licencia Apache-2.0
+https://github.com/tensorflow/tfjs
+
+NOTA: la precisión real con escritura infantil no está validada; probar en móvil/tablet.

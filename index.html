@@ -6,11 +6,11 @@
 <meta name="theme-color" content="#1683ec">
 <meta name="application-name" content="Sumaventuras">
 <meta name="apple-mobile-web-app-title" content="Sumaventuras">
-<link rel="icon" href="./favicon.ico?v=4" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=4">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=4">
-<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=4">
-<link rel="manifest" href="./site.webmanifest?v=4">
+<link rel="icon" href="./favicon.ico?v=5" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png?v=5">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png?v=5">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png?v=5">
+<link rel="manifest" href="./site.webmanifest?v=5">
 
 <title>Sumaventuras — Las tablas de sumar</title>
 <style>
@@ -45,7 +45,7 @@ main{max-width:980px;margin:auto;padding:0 16px 28px}.nav{display:flex;gap:8px;a
 .write-surface{border:3px dashed #6baff0;border-radius:17px;background:#fff;overflow:hidden;box-shadow:inset 0 2px 9px #bfdafa55}
 #handCanvas{display:block;width:100%;height:auto;aspect-ratio:2 / 1;touch-action:none;cursor:crosshair}
 .write-actions{display:flex;gap:8px;margin-top:10px}.write-actions button{flex:1;min-width:0}.recognition{margin-top:11px;border:2px solid #b8daf7;border-radius:12px;padding:10px;background:#f0f8ff;color:#24517d;font-weight:900}.recognition-actions{display:flex;gap:8px;justify-content:center;margin-top:9px}.recognition-actions button{flex:1;max-width:230px}
-@media(max-width:420px){.level-button{font-size:11px;padding:10px 3px}.level-panel{padding:10px}.level-buttons{gap:4px;padding:4px}.mode-name{font-size:11px}.write-actions button{padding:12px 8px}}
+@media(max-width:420px){.write-actions button{font-size:12px;padding:11px 5px}.level-button{font-size:11px;padding:10px 3px}.level-panel{padding:10px}.level-buttons{gap:4px;padding:4px}.mode-name{font-size:11px}.write-actions button{padding:12px 8px}}
 </style>
 </head>
 <body>
@@ -72,7 +72,7 @@ main{max-width:980px;margin:auto;padding:0 16px 28px}.nav{display:flex;gap:8px;a
 <div class="pane"><div class="gamehead"><button id="back" class="smallbtn">← Mapa</button><div style="text-align:center"><b id="worldName">🏴‍☠️ Isla pirata</b><div id="gameModeName" class="mode-name">⭐ Nivel 1 · Elegir</div></div><b id="round">1/10</b></div><div class="progress"><span id="progress" style="width:0%"></span></div></div>
 <div class="pane challenge"><div id="scene" class="scene">🏴‍☠️</div><div id="story" class="muted">¡Resuelve la suma para encontrar el tesoro!</div><div id="equation" class="equation">2 + 1 = ?</div><div id="hintVisual" class="pane hidden" style="margin:0 0 12px;background:#fff8e8;border:2px dashed #e6b75d"><b id="hintTitle">🧩 Cuenta los elementos:</b><div id="hintGroups" style="display:flex;justify-content:center;align-items:center;gap:12px;flex-wrap:wrap;font-size:25px;margin:8px 0"></div><div id="hintEquation" class="muted"></div></div><div id="answers" class="answers"></div>
 <form id="typingPanel" class="answer-panel hidden" autocomplete="off"><label class="muted" for="typedAnswer">Escribe aquí el resultado:</label><input id="typedAnswer" class="answer-input" type="text" inputmode="numeric" maxlength="2" pattern="[0-9]*" placeholder="¿Cuánto es?" aria-label="Resultado de la suma"><div class="answer-tools"><button type="button" id="clearTyped" class="wood">⌫ Borrar</button><button type="submit" id="checkTyped" class="blue">✓ Comprobar</button></div></form>
-<div id="writingPanel" class="write-panel hidden"><div class="write-instruction">✍️ Escribe el resultado con el dedo, el ratón o un lápiz digital.</div><div class="write-surface"><canvas id="handCanvas" width="640" height="320" aria-label="Zona para escribir a mano el resultado"></canvas></div><div class="write-actions"><button type="button" class="wood" id="handClear">⌫ Borrar</button><button type="button" class="blue" id="handCheck">✓ Comprobar</button></div><div id="recognition" class="recognition hidden" aria-live="polite"><div id="recognitionText"></div><div class="recognition-actions"><button type="button" id="handEdit" class="wood">↺ No, borrar</button><button type="button" id="handConfirm" class="blue">✓ Sí, es ese</button></div></div><div class="muted" style="margin-top:8px">Primero comprobaremos qué número se ha leído. Confirmarlo evita perder intentos por errores de reconocimiento.</div></div>
+<div id="writingPanel" class="write-panel hidden"><div class="write-instruction">✍️ Escribe el resultado completo en este único recuadro (de 0 a 20).</div><div class="write-surface"><canvas id="handCanvas" width="640" height="320" aria-label="Zona para escribir a mano el resultado"></canvas></div><div class="write-actions"><button type="button" class="wood" id="handUndo">↶ Deshacer</button><button type="button" class="wood" id="handClear">⌫ Borrar</button><button type="button" class="blue" id="handCheck">✓ Comprobar</button></div><div id="recognition" class="recognition hidden" aria-live="polite"><div id="recognitionText"></div><div class="recognition-actions"><button type="button" id="handEdit" class="wood">↺ No, borrar</button><button type="button" id="handConfirm" class="blue">✓ Sí, es ese</button></div></div><div class="muted" style="margin-top:8px">El reconocimiento se realiza en este dispositivo, sin servicios de pago. Confirma el número leído antes de gastar un intento.</div></div>
 <div class="muted" style="margin-top:10px">⭐⭐⭐ 27–30 puntos · ⭐⭐ 20–26 puntos · ⭐ 1–19 puntos</div><div id="feedback" class="feedback" aria-live="polite"></div><button id="next" class="blue full hidden">¡Siguiente reto! ➜</button>
 <div id="finish" class="hidden"><div id="finishIcon" style="font-size:64px">🏆</div><div id="finishTitle" class="title" style="font-size:25px">¡Misión cumplida!</div><div id="finishDesc" class="muted" style="margin:12px 0"></div><div id="medal" style="font-size:36px;margin-bottom:14px"></div><button id="replay" class="wood">🔁 Volver a jugar</button> <button id="finishMap" class="blue">🗺️ Mapa</button></div></div>
 </section>
@@ -255,8 +255,9 @@ handCanvas.addEventListener('pointermove',e=>{if(handDisabled||e.pointerId!==han
 function stopHand(e){if(handPointer===e.pointerId){activeStroke=null;handPointer=null}}
 handCanvas.addEventListener('pointerup',stopHand);handCanvas.addEventListener('pointercancel',stopHand);
 function clearHand(){handStrokes=[];activeStroke=null;handPointer=null;pendingRecognition=null;$('recognition').classList.add('hidden');drawHand()}
-function setWritingDisabled(disabled){handDisabled=disabled;$('handCheck').disabled=disabled;$('handClear').disabled=disabled;$('handConfirm').disabled=disabled;$('handEdit').disabled=disabled}
+function setWritingDisabled(disabled){handDisabled=disabled;$('handCheck').disabled=disabled;$('handClear').disabled=disabled;$('handUndo').disabled=disabled;$('handConfirm').disabled=disabled;$('handEdit').disabled=disabled}
 $('handClear').onclick=clearHand;$('handEdit').onclick=clearHand;
+$('handUndo').onclick=()=>{if(handDisabled||!handStrokes.length)return;handStrokes.pop();pendingRecognition=null;$('recognition').classList.add('hidden');drawHand()};
 const OCR_SIZE=28;let numberTemplates=null;
 function normalizeInk(canvas){
  const c=canvas.getContext('2d',{willReadFrequently:true}),w=canvas.width,h=canvas.height,p=c.getImageData(0,0,w,h).data;
@@ -287,34 +288,128 @@ function buildNumberTemplates(){
  }
  numberTemplates=list;return list;
 }
-function readHandwrittenNumber(){
+/* Reconocimiento gratuito. Un solo canvas: se separan las cifras internamente.
+   La IA solo descarga el modelo y la librería; la predicción ocurre en el dispositivo.
+   Si no puede cargarse, se usa el sistema de plantillas como respaldo. */
+const OCR_MODEL_URL='https://cdn.jsdelivr.net/gh/balkarjun/digit-recognition@master/model/model.json';
+const OCR_LIB_URL='https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js';
+let digitModelPromise=null, digitModel=null, digitModelError=false;
+function loadDigitModel(){
+ if(digitModelPromise)return digitModelPromise;
+ digitModelPromise=(async()=>{
+   if(!window.tf){
+     await new Promise((resolve,reject)=>{
+       const script=document.createElement('script');script.src=OCR_LIB_URL;script.async=true;
+       script.onload=resolve;script.onerror=()=>reject(new Error('No se pudo descargar TensorFlow.js'));
+       document.head.appendChild(script);
+     });
+   }
+   const model=await window.tf.loadLayersModel(OCR_MODEL_URL);
+   digitModel=model;return model;
+ })().catch(err=>{console.warn('Modelo manuscrito no disponible: se usarán plantillas.',err);digitModelError=true;return null});
+ return digitModelPromise;
+}
+function normalizedSampleRegion(x0,x1){
+ const w=handCanvas.width,h=handCanvas.height,tmp=document.createElement('canvas');
+ tmp.width=Math.max(1,x1-x0);tmp.height=h;
+ tmp.getContext('2d').drawImage(handCanvas,x0,0,tmp.width,h,0,0,tmp.width,h);
+ return normalizeInk(tmp);
+}
+function inkSplitPositions(){
+ const w=handCanvas.width,h=handCanvas.height;
+ const data=handCtx.getImageData(0,0,w,h).data,cols=new Uint16Array(w);
+ let left=w,right=-1,top=h,bottom=-1;
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+   if(data[(y*w+x)*4+3]>50){cols[x]++;if(x<left)left=x;if(x>right)right=x;if(y<top)top=y;if(y>bottom)bottom=y;}
+ }
+ if(right<0)return null;
+ const width=right-left+1,height=bottom-top+1;
+ const gapMin=Math.max(5,Math.round(height*.055)),splits=[];
+ let x=left;
+ while(x<=right){if(cols[x]){x++;continue}
+   const gapStart=x;while(x<=right&&!cols[x])x++;
+   const gap=x-gapStart,mid=Math.round((x+gapStart)/2);
+   if(gap>=gapMin && mid-left>=height*.15 && right-mid>=height*.18)
+     splits.push({x:mid,gap});
+ }
+ // Prueba también la división central si las cifras se tocan: no se verá ninguna casilla extra.
+ if(width>height*.84 && splits.length===0){
+   let bestX=-1,bestCount=Infinity;
+   for(let q=Math.round(left+width*.30);q<=Math.round(left+width*.72);q++){
+     let density=0;for(let z=-3;z<=3;z++)density+=cols[Math.max(left,Math.min(right,q+z))];
+     if(density<bestCount){bestCount=density;bestX=q;}
+   }
+   if(bestX>0)splits.push({x:bestX,gap:0});
+ }
+ return {left,right,width,height,splits:splits.sort((a,b)=>b.gap-a.gap).slice(0,4)};
+}
+function fallbackDigitProbabilities(sample){
+ const templates=buildNumberTemplates(),dist=distanceInk(sample.mask),scores=Array(10).fill(Infinity);
+ for(const t of templates){if(t.value>9)continue;
+   let a=0,b=0;for(let i=0;i<sample.mask.length;i++){if(sample.mask[i])a+=t.dist[i];if(t.mask[i])b+=dist[i]}
+   const score=a/sample.count*.58+b/t.count*.42+Math.abs(Math.log(Math.max(.1,sample.aspect)/Math.max(.1,t.aspect)))*.2;
+   scores[t.value]=Math.min(scores[t.value],score);
+ }
+ const exps=scores.map(v=>Math.exp(-v*2.2)),sum=exps.reduce((a,b)=>a+b,0);
+ return exps.map(x=>x/sum);
+}
+function digitProbabilities(sample){
+ if(!sample||sample.count<7)return null;
+ if(!digitModel)return fallbackDigitProbabilities(sample);
+ const tf=window.tf;
+ return tf.tidy(()=>{
+   const values=Float32Array.from(sample.mask,x=>x);
+   const input=tf.tensor4d(values,[1,28,28,1]);
+   const output=digitModel.predict(input);
+   return Array.from(output.dataSync());
+ });
+}
+function maxIndex(a){let idx=0;for(let i=1;i<a.length;i++)if(a[i]>a[idx])idx=i;return idx}
+async function readHandwrittenNumber(){
  const pts=handStrokes.flat();if(pts.length<3)return null;
  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y),w=Math.max(...xs)-Math.min(...xs),h=Math.max(...ys)-Math.min(...ys);
  if(w<14&&h<24)return null;
- const sample=normalizeInk(handCanvas);if(!sample||sample.count<9)return null;
- const candidates=buildNumberTemplates(),distance=distanceInk(sample.mask);
- let best={score:Infinity,value:null},runner={score:Infinity,value:null};
- // Mantener el mejor resultado por CADA número, evitando comparar variantes del mismo.
- const bestByValue=Array(21).fill(Infinity);
- for(const t of candidates){
-   let a=0,b=0;for(let i=0;i<sample.mask.length;i++){if(sample.mask[i])a+=t.dist[i];if(t.mask[i])b+=distance[i]}
-   const shape=a/sample.count*.58+b/t.count*.42;
-   const aspectPenalty=Math.abs(Math.log(Math.max(.1,sample.aspect)/Math.max(.1,t.aspect)))*.20;
-   const score=shape+aspectPenalty;
-   if(score<bestByValue[t.value])bestByValue[t.value]=score;
+ const geometry=inkSplitPositions();if(!geometry)return null;
+ const whole=normalizedSampleRegion(0,handCanvas.width);if(!whole||whole.count<9)return null;
+ await loadDigitModel(); // Si la red falla, se conserva el reconocimiento de respaldo sin coste.
+ const all=digitProbabilities(whole);if(!all)return null;
+ const first=maxIndex(all);
+ let best={value:first,confidence:all[first],segmented:false},candidate=null;
+ for(const split of geometry.splits){
+   const a=normalizedSampleRegion(geometry.left,split.x),b=normalizedSampleRegion(split.x+1,geometry.right+1);
+   if(!a||!b||a.count<8||b.count<8)continue;
+   const ap=digitProbabilities(a),bp=digitProbabilities(b);if(!ap||!bp)continue;
+   const firstDigit=ap[1]>=ap[2]?1:2,secondDigit=firstDigit===2?0:maxIndex(bp);
+   const number=firstDigit*10+secondDigit,conf=Math.sqrt(ap[firstDigit]*bp[secondDigit]);
+   if(!candidate||conf>candidate.confidence)candidate={value:number,confidence:conf,segmented:true,hasGap:split.gap>0};
  }
- bestByValue.forEach((score,value)=>{if(score<best.score){runner=best;best={score,value}}else if(score<runner.score){runner={score,value}}});
- return best.value===null?null:{value:best.value,score:best.score,margin:runner.score-best.score};
+ if(candidate){
+   const aspect=geometry.width/geometry.height;
+   // Una separación real de tinta suele indicar dos cifras, pero evita partir un solo 4 u 8.
+   const splitLikely=candidate.hasGap && candidate.confidence>.29 && aspect>.56;
+   const twoDigitsLikely=aspect>.91 && candidate.confidence>Math.max(.40,best.confidence*.58);
+   if(splitLikely||twoDigitsLikely)best=candidate;
+ }
+ return {value:best.value,confidence:best.confidence,usingModel:!!digitModel};
 }
-$('handCheck').onclick=()=>{
+$('handCheck').onclick=async()=>{
  if(locked||playingLevel!==3||handDisabled)return;
- const parsed=readHandwrittenNumber();
- if(!parsed||parsed.score>4.7){$('feedback').style.color='#bb6834';$('feedback').textContent='✍️ No he podido leer el número. Escríbelo más grande o pulsa Borrar; no pierdes ningún intento.';return}
- pendingRecognition=parsed.value;
- $('recognitionText').textContent='🔎 Creo que has escrito: '+parsed.value+'. ¿Es correcto?';
- $('recognition').classList.remove('hidden');
- $('feedback').textContent='Si no he leído bien tu número, pulsa «No, borrar». No perderás intentos.';
- $('feedback').style.color='#275b88';
+ setWritingDisabled(true);const readingSnapshot=handStrokes.map(x=>x.length).join(',');$('feedback').style.color='#275b88';$('feedback').textContent='🔎 Leyendo tu número…';
+ try{
+   const parsed=await readHandwrittenNumber();
+   if(playingLevel!==3||locked||handStrokes.map(x=>x.length).join(',')!==readingSnapshot)return;
+   if(!parsed||parsed.confidence<(parsed.usingModel?.19:.11)){
+     $('feedback').style.color='#bb6834';
+     $('feedback').textContent='✍️ No lo he leído bien. Puedes borrar o deshacer y escribirlo de nuevo. No pierdes intentos.';
+     return;
+   }
+   pendingRecognition=parsed.value;
+   $('recognitionText').textContent='🔎 Creo que has escrito: '+parsed.value+'. ¿Es correcto?';
+   $('recognition').classList.remove('hidden');
+   $('feedback').textContent='Si no lo he leído bien, pulsa «No, borrar». No perderás intentos.';
+   $('feedback').style.color='#275b88';
+ }catch(e){console.warn(e);$('feedback').textContent='No se pudo analizar la escritura. Prueba a borrar y volver a escribir, sin perder intentos.'}
+ finally{if(playingLevel===3&&!locked)setWritingDisabled(false)}
 };
 $('handConfirm').onclick=()=>{if(locked||playingLevel!==3||pendingRecognition===null)return;const v=pendingRecognition;pendingRecognition=null;$('recognition').classList.add('hidden');check(v)};
 function finish(){
